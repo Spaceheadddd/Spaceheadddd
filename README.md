@@ -14,5 +14,5 @@ Here are some ideas to get you started:
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 -->
-<img src="https://tryhackme-badges.s3.amazonaws.com/Spaceheadddd.png" width="200" alt="TryHackMe Badge"/>
+<img src="https://tryhackme-badges.s3.amazonaws.com/Spaceheadddd.png" width="300" alt="TryHackMe Badge"/>
 
