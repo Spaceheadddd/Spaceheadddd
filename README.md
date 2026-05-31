@@ -1,21 +1,16 @@
 
 ```
+Role:    Security Researcher 
 
-       /\          jayesh@cypher
+Focus:   Cybersecurity · Web · AI
 
-      /  \         ------------
+Tools:   Python · JS · React · Docker · Linux
 
-     / /\ \        Role:    IT Student → Security Researcher
+OS:      LINUX (attacking everything else for fun when bored :) )
 
-    / /  \ \       Focus:   Cybersecurity · Web · AI
+Shell:   Zsh
 
-   /_/    \_\      Tools:   Python · JS · React · Docker · Linux
-
-                   OS:      LINUX (attacking everything else)
-
-                   Shell:   Zsh
-
-                   Status:  breaking things to understand them
+Status:  breaking things to understand them and rebuilding them
 
 ```
 
@@ -30,7 +25,3 @@
 - `Security lab` — DVWA, SQLi, building toward red team
 
 ---
-
-**find me**
-
-[LinkedIn](https://linkedin.com/in/jayesh-sudhakar) · [BugCrowd](https://bugcrowd.com/Elfren)
