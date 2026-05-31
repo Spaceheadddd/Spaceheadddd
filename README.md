@@ -1,22 +1,47 @@
-# sys.spaceheadddd
-
-```
-0xdeadbeef → break → rebuild → repeat
 ```
 
-**offensive security researcher** | bug bounty hunter | tool builder
+$ whoami
+
+```
+
+```
+
+jayesh@cypher:~$ neofetch
+
+```
+
+```
+
+       /\          jayesh@cypher
+
+      /  \         ------------
+
+     / /\ \        Role:    IT Student → Security Researcher
+
+    / /  \ \       Focus:   Cybersecurity · Web · AI
+
+   /_/    \_\      Tools:   Python · JS · React · Docker · Linux
+
+                   OS:      macOS (attacking everything else)
+
+                   Shell:   Zsh
+
+                   Status:  breaking things to understand them
+
+```
 
 ---
 
-## arsenal
-`Python` `JavaScript` `Bash` `Docker` `Linux`
+**projects**
 
-## exploits & tools
-- **Argus** — web vulnerability scanner
-- **BugCrowd** — active researcher
-- **red team labs** — DVWA, SQLi, exploitation
+- `Argus` — web vulnerability scanner, built from scratch
 
-## links
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/jayesh-sudhakar)
-[![BugCrowd](https://img.shields.io/badge/BugCrowd-%23F26822.svg?logo=bugcrowd&logoColor=white)](https://bugcrowd.com)
-[![Holopin](https://holopin.me/spaceheadddd)](https://holopin.io/@spaceheadddd)
+- `Bug bounty` — BugCrowd, active
+
+- `Security lab` — DVWA, SQLi, building toward red team
+
+---
+
+**find me**
+
+[LinkedIn](https://linkedin.com/in/jayesh-sudhakar) · [BugCrowd](https://bugcrowd.com/Elfren)
