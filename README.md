@@ -1,14 +1,3 @@
-```
-
-$ whoami
-
-```
-
-```
-
-jayesh@cypher:~$ neofetch
-
-```
 
 ```
 
