@@ -11,7 +11,7 @@
 
    /_/    \_\      Tools:   Python · JS · React · Docker · Linux
 
-                   OS:      macOS (attacking everything else)
+                   OS:      LINUX (attacking everything else)
 
                    Shell:   Zsh
 
@@ -25,7 +25,7 @@
 
 - `Argus` — web vulnerability scanner, built from scratch
 
-- `Bug bounty` — BugCrowd, active
+- `Bug bounty` — BugCrowd, HackerOne - active
 
 - `Security lab` — DVWA, SQLi, building toward red team
 
