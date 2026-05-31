@@ -6,7 +6,7 @@ Focus:   Cybersecurity · Web · AI
 
 Tools:   Python · JS · React · Docker · Linux
 
-OS:      LINUX [ attacking everything else for fun when bored :) ]
+OS:      LINUX [ attacking everything else for fun when bored O.O ]
 
 Shell:   Zsh
 
