@@ -1,29 +1,22 @@
-> *one who reads what others can't.*
+# sys.spaceheadddd
 
-<img align="right" width="300" src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif"/>
+```
+0xdeadbeef → break → rebuild → repeat
+```
 
-breaking things. building things. understanding both.
-
-IT student → security researcher → whatever comes next.
-
-**currently:** bug bounty · offensive security labs · building tools
+**offensive security researcher** | bug bounty hunter | tool builder
 
 ---
 
-**stack that matters**
+## arsenal
+`Python` `JavaScript` `Bash` `Docker` `Linux`
 
-`Python` `JavaScript` `React` `Node` `Bash` `Docker` `Linux`
+## exploits & tools
+- **Argus** — web vulnerability scanner
+- **BugCrowd** — active researcher
+- **red team labs** — DVWA, SQLi, exploitation
 
----
-
-**real work**
-
-- 🔍 **Argus** — web vulnerability scanner I built from scratch
-- 🐛 **Bug bounty** — active on BugCrowd
-- 🧪 **Security lab** — DVWA, SQLi, building toward red team
-
----
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/jayesh-sudhakar) [![BugCrowd](https://img.shields.io/badge/Bugcrowd-%23F26822.svg?logo=bugcrowd&logoColor=white)](https://bugcrowd.com/Elfren)
-
-[![@spaceheadddd's Holopin badges](https://holopin.me/spaceheadddd)](https://holopin.io/@spaceheadddd)
+## links
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/jayesh-sudhakar)
+[![BugCrowd](https://img.shields.io/badge/BugCrowd-%23F26822.svg?logo=bugcrowd&logoColor=white)](https://bugcrowd.com)
+[![Holopin](https://holopin.me/spaceheadddd)](https://holopin.io/@spaceheadddd)
