@@ -11,8 +11,8 @@ android {
         applicationId = "com.spacehead.handwarmer"
         minSdk = 29
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 4
+        versionName = "1.3"
     }
 
     // A fixed debug key, so every CI build installs over the previous one

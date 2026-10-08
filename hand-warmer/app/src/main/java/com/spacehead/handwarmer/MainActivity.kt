@@ -51,6 +51,7 @@ class MainActivity : Activity() {
     private lateinit var timerSeek: SeekBar
     private lateinit var turboSwitch: Switch
     private lateinit var screenBoost: Switch
+    private lateinit var stayAwake: Switch
     private lateinit var overdriveSwitch: Switch
     private lateinit var toggleButton: TextView
     private lateinit var interlocks: TextView
@@ -107,6 +108,7 @@ class MainActivity : Activity() {
         timerSeek = findViewById(R.id.timerSeek)
         turboSwitch = findViewById(R.id.turbo)
         screenBoost = findViewById(R.id.screenBoost)
+        stayAwake = findViewById(R.id.stayAwake)
         overdriveSwitch = findViewById(R.id.overdrive)
         toggleButton = findViewById(R.id.toggleButton)
         interlocks = findViewById(R.id.interlocks)
@@ -138,6 +140,7 @@ class MainActivity : Activity() {
         timerSeek.progress = prefs.getInt("timerIdx", 3)
         turboSwitch.isChecked = prefs.getBoolean("turbo", false)
         screenBoost.isChecked = prefs.getBoolean("screenBoost", false)
+        stayAwake.isChecked = prefs.getBoolean("stayAwake", true)
         mode = prefs.getString("mode", MODE_MANUAL) ?: MODE_MANUAL
 
         val onChange = object : SeekBar.OnSeekBarChangeListener {
@@ -154,10 +157,13 @@ class MainActivity : Activity() {
         targetSeek.setOnSeekBarChangeListener(onChange)
         timerSeek.setOnSeekBarChangeListener(onChange)
         turboSwitch.setOnCheckedChangeListener { _, _ -> applySettings() }
-        screenBoost.setOnCheckedChangeListener { _, _ ->
+        val onScreenOption = android.widget.CompoundButton.OnCheckedChangeListener { _, _ ->
             saveSettings()
             applyScreenBoost()
         }
+        screenBoost.setOnCheckedChangeListener(onScreenOption)
+        stayAwake.setOnCheckedChangeListener(onScreenOption)
+        findViewById<View>(R.id.exportLog).setOnClickListener { exportLog() }
         overdriveSwitch.setOnCheckedChangeListener { _, checked ->
             if (settingSwitch) return@setOnCheckedChangeListener
             if (checked) {
@@ -424,17 +430,45 @@ class MainActivity : Activity() {
         }
     }
 
-    /** Keeps the screen on at full brightness for extra heat, only while warming and visible. */
+    /**
+     * While warming and visible: STAY AWAKE keeps the screen on (so One UI doesn't apply
+     * screen-off CPU limits); SCREEN BOOST also turns brightness to full for extra heat.
+     */
     private fun applyScreenBoost() {
-        val on = screenBoost.isChecked && HeaterService.isRunning
+        val running = HeaterService.isRunning
+        val boost = screenBoost.isChecked && running
+        val keepOn = (stayAwake.isChecked || screenBoost.isChecked) && running
         val lp = window.attributes
-        val brightness = if (on) 1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+        val brightness = if (boost) 1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         if (lp.screenBrightness != brightness) {
             lp.screenBrightness = brightness
             window.attributes = lp
         }
-        if (on) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        if (keepOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    /** Shares the current/last session's diagnostics as CSV text. */
+    private fun exportLog() {
+        if (SessionLog.isEmpty()) {
+            AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle("No session yet")
+                .setMessage("Start warming for a few minutes, then export the log.")
+                .setPositiveButton("OK", null)
+                .show()
+            return
+        }
+        val version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: ""
+        val header = "# Ignis $version | ${Build.MANUFACTURER} ${Build.MODEL} | Android ${Build.VERSION.RELEASE}" +
+            " | turbo=${HeaterService.turbo} overdrive=${HeaterService.overdrive}" +
+            " | room=${RoomTemp.estimate(this)?.tempC?.let { "%.1f".format(it) } ?: "?"}" +
+            " outside=${Outside.tempC?.let { "%.1f".format(it) } ?: "?"}" +
+            " | thermal_status: 0 none 1 light 2 moderate 3 severe 4 critical"
+        val send = Intent(Intent.ACTION_SEND)
+            .setType("text/plain")
+            .putExtra(Intent.EXTRA_SUBJECT, "Ignis session log")
+            .putExtra(Intent.EXTRA_TEXT, SessionLog.toCsv(header))
+        startActivity(Intent.createChooser(send, "Export session log"))
     }
 
     private fun saveSettings() {
@@ -444,6 +478,7 @@ class MainActivity : Activity() {
             .putInt("timerIdx", timerSeek.progress)
             .putBoolean("turbo", turboSwitch.isChecked)
             .putBoolean("screenBoost", screenBoost.isChecked)
+            .putBoolean("stayAwake", stayAwake.isChecked)
             .putString("mode", mode)
             .apply()
     }

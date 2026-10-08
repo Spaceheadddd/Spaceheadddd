@@ -51,6 +51,8 @@ class HeaterService : Service() {
         private const val WINDOW_MS = 100L
         /** Battery temperature lags the chip; look this far ahead along the current trend. */
         private const val LEAD_SECONDS = 45f
+        /** Full power for this long without +0.3 °C counts as a plateau. */
+        private const val PLATEAU_MS = 3 * 60_000L
 
         // State shared with the UI. Written on the main thread, read by workers/UI.
         @Volatile var isRunning = false
@@ -82,6 +84,9 @@ class HeaterService : Service() {
     private var gpu: GpuBurner? = null
     private var wakeLock: PowerManager.WakeLock? = null
     private var reachedTarget = false
+    // Plateau detection: last time the temperature made real progress while at full power.
+    private var progressTempC = 0f
+    private var progressAtElapsed = 0L
     @Volatile private var active = false
 
     private val controlLoop = object : Runnable {
@@ -120,6 +125,9 @@ class HeaterService : Service() {
             lastStopReason = null
             reachedTarget = false
             peakC = 0f
+            progressAtElapsed = SystemClock.elapsedRealtime()
+            progressTempC = Monitor.readBattery(this)?.tempC ?: 0f
+            SessionLog.start()
             acquireWakeLock(minutes)
             startWorkers()
             handler.post(controlLoop)
@@ -141,7 +149,9 @@ class HeaterService : Service() {
         }
         val temp = battery.tempC
         if (temp > peakC) peakC = temp
-        val thermal = (getSystemService(POWER_SERVICE) as PowerManager).currentThermalStatus
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        val thermal = pm.currentThermalStatus
+        val screenOn = pm.isInteractive
 
         when {
             temp >= limitC ->
@@ -158,12 +168,12 @@ class HeaterService : Service() {
             battery.plugged -> {
                 // Heat + charging is the worst combination for battery health.
                 duty = 0f
-                status = "Paused while charging"
+                status = "Paused: charging"
             }
             thermal >= PowerManager.THERMAL_STATUS_SEVERE -> {
                 // Let the system cool down; resumes on its own once the status drops.
                 duty = 0f
-                status = "Cooling: system thermal limit"
+                status = "Paused: Android reports severe heat"
             }
             else -> {
                 // Proportional control on a predicted temperature: battery temp lags the
@@ -176,8 +186,16 @@ class HeaterService : Service() {
                     reachedTarget = true
                     buzz()
                 }
+                val now = SystemClock.elapsedRealtime()
+                if (d < 0.95f || temp >= progressTempC + 0.3f) {
+                    progressTempC = temp
+                    progressAtElapsed = now
+                }
+                val plateau = d >= 0.95f && now - progressAtElapsed > PLATEAU_MS && temp < targetC - 1f
                 status = when {
-                    d >= 0.95f -> "Heating up"
+                    plateau && !screenOn -> "Plateau: screen off, phone limiting CPU"
+                    plateau -> "Plateau: phone limiting power"
+                    d >= 0.95f -> if (screenOn) "Heating up" else "Heating up (screen off)"
                     d <= 0.01f -> "At temperature, resting"
                     else -> "Holding warm (%d%% power)".format((d * 100).toInt())
                 }
@@ -185,6 +203,10 @@ class HeaterService : Service() {
         }
 
         Monitor.record(temp, duty)
+        SessionLog.add(
+            temp, targetC, duty, thermal, Monitor.headroomPercent(this),
+            Monitor.powerWatts(this, battery), battery.plugged, screenOn, status
+        )
         WarmerTileService.refresh(this)
 
         val minsLeft = ((endsAtElapsed - SystemClock.elapsedRealtime()) / 60_000L) + 1
