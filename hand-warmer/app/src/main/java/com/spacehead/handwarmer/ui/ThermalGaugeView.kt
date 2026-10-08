@@ -25,9 +25,14 @@ class ThermalGaugeView @JvmOverloads constructor(
         set(v) { field = v; invalidate() }
     var active: Boolean = false
         set(v) { field = v; invalidate() }
+    /** Safety cutoff, drawn as a red tick on the scale. */
+    var limitC: Float = 46f
+        set(v) { field = v; invalidate() }
+    var overdrive: Boolean = false
+        set(v) { field = v; invalidate() }
 
     private val minC = 20f
-    private val maxC = 46f
+    private val maxC = 50f
     private val startAngle = 135f
     private val sweep = 270f
 
@@ -93,7 +98,11 @@ class ThermalGaugeView @JvmOverloads constructor(
             val major = c % 5 == 0
             val r1 = r + 9.dp
             val r2 = r1 + if (major) 6.dp else 3.dp
-            tick.color = if (major) Palette.DIM else Palette.LINE
+            tick.color = when {
+                c >= limitC -> Palette.HEAT_HOT
+                major -> Palette.DIM
+                else -> Palette.LINE
+            }
             canvas.drawLine(
                 cx + (r1 * cos(a)).toFloat(), cy + (r1 * sin(a)).toFloat(),
                 cx + (r2 * cos(a)).toFloat(), cy + (r2 * sin(a)).toFloat(), tick
@@ -112,6 +121,7 @@ class ThermalGaugeView @JvmOverloads constructor(
         }
 
         // Target marker crossing the main ring.
+        marker.color = if (overdrive) Palette.HEAT_HOT else Palette.TEXT
         val ta = Math.toRadians(angleFor(targetC).toDouble())
         val m1 = r - 10.dp
         val m2 = r + 10.dp
@@ -124,7 +134,11 @@ class ThermalGaugeView @JvmOverloads constructor(
         canvas.drawText(if (t != null) "%.1f".format(t) else "--.-", cx, cy + 14.dp, big)
         small.color = Palette.DIM
         canvas.drawText("BATTERY °C", cx, cy - 34.dp, small)
-        small.color = if (active) Palette.HEAT else Palette.DIM
+        small.color = when {
+            overdrive -> Palette.HEAT_HOT
+            active -> Palette.HEAT
+            else -> Palette.DIM
+        }
         canvas.drawText("TARGET %.0f°  ·  PWR %d%%".format(targetC, if (active) (duty * 100).toInt() else 0), cx, cy + 40.dp, small)
     }
 }

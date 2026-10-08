@@ -1,0 +1,36 @@
+<resources>
+    <style name="OdHeading">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:letterSpacing">0.3</item>
+        <item name="android:textColor">@color/dim</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="OdBody">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="HwSwitch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:thumbTint">@color/heat</item>
+        <item name="android:trackTint">@color/line</item>
+    </style>
+
+    <style name="HwHint">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/dim</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+</resources>

@@ -5,4 +5,6 @@
     <color name="text">#E6E8EB</color>
     <color name="dim">#5C6470</color>
     <color name="heat">#FF6A1A</color>
+    <color name="danger">#FF3B30</color>
+    <color name="sig">#9AA3AE</color>
 </resources>

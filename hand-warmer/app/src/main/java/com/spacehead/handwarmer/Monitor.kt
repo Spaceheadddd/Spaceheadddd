@@ -33,6 +33,16 @@ object Monitor {
     @Synchronized
     fun history(): List<Sample> = samples.toList()
 
+    /** Warming rate over the last minute in °C/min, or null with too little data. */
+    @Synchronized
+    fun ratePerMinute(): Float? {
+        val last = samples.lastOrNull() ?: return null
+        val first = samples.firstOrNull { last.atElapsed - it.atElapsed <= 60_000L } ?: return null
+        val dt = last.atElapsed - first.atElapsed
+        if (dt < 20_000L) return null
+        return (last.tempC - first.tempC) / (dt / 60_000f)
+    }
+
     fun readBattery(context: Context): BatteryInfo? {
         val i = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             ?: return null

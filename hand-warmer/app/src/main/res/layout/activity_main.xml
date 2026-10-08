@@ -2,10 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
-    android:fitsSystemWindows="true">
+    android:background="@color/bg">
 
     <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -83,6 +83,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:orientation="horizontal" />
+
+            <LinearLayout
+                android:id="@+id/row3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Tap ROOM to calibrate against a real thermometer · tap OUTSIDE to refresh"
+                android:textColor="@color/dim"
+                android:textSize="9sp" />
         </LinearLayout>
 
         <!-- Heat monitor -->
@@ -170,23 +185,36 @@
                 android:thumbTint="@color/heat" />
 
             <Switch
-                android:id="@+id/screenBoost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:letterSpacing="0.1"
-                android:text="SCREEN BOOST"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:thumbTint="@color/heat"
-                android:trackTint="@color/line" />
+                android:id="@+id/turbo"
+                style="@style/HwSwitch"
+                android:layout_marginTop="16dp"
+                android:text="TURBO" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Full brightness + screen on while the app is open"
-                android:textColor="@color/dim"
-                android:textSize="10sp" />
+                style="@style/HwHint"
+                android:text="Also loads the graphics chip: fastest warm-up, more battery drain" />
+
+            <Switch
+                android:id="@+id/screenBoost"
+                style="@style/HwSwitch"
+                android:layout_marginTop="12dp"
+                android:text="SCREEN BOOST" />
+
+            <TextView
+                style="@style/HwHint"
+                android:text="Full brightness + screen on while the app is open" />
+
+            <Switch
+                android:id="@+id/overdrive"
+                style="@style/HwSwitch"
+                android:layout_marginTop="12dp"
+                android:text="⚠ OVERDRIVE"
+                android:textColor="@color/danger"
+                android:thumbTint="@color/danger" />
+
+            <TextView
+                style="@style/HwHint"
+                android:text="Unlocks 45–46 °C · 20 min sessions · resets when the app closes" />
         </LinearLayout>
 
         <TextView
@@ -208,18 +236,46 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
-            android:text="INTERLOCKS: 44°C CUTOFF · SEVERE THERMAL STOP\nPAUSE ON CHARGE · STOP BELOW 15% BATTERY"
+            android:id="@+id/interlocks"
             android:textColor="@color/dim"
             android:textSize="9sp" />
 
-        <TextView
+        <!-- Arcane Labs signature -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="36dp"
             android:gravity="center"
-            android:letterSpacing="0.5"
-            android:text="ARCANE LABS"
-            android:textColor="@color/line"
-            android:textSize="10sp" />
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="28dp"
+                android:layout_height="1dp"
+                android:background="@color/heat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:letterSpacing="0.5"
+                android:text="ARCANE LABS"
+                android:textColor="@color/sig"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="28dp"
+                android:layout_height="1dp"
+                android:background="@color/heat" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/buildTag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:letterSpacing="0.3"
+            android:textColor="@color/dim"
+            android:textSize="9sp" />
     </LinearLayout>
 </ScrollView>

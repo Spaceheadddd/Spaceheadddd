@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="22dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="28dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.35"
+            android:text="⚠ OVERDRIVE"
+            android:textColor="@color/danger"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Read this before enabling. It takes about a minute."
+            android:textColor="@color/dim"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@style/OdHeading"
+            android:text="WHAT IT DOES" />
+
+        <TextView
+            style="@style/OdBody"
+            android:text="• Unlocks targets of 45 °C and 46 °C (battery temperature).\n• Raises the safety cutoff from 46 °C to 48 °C.\n• Sessions are capped at 20 minutes.\n• Overdrive switches itself off every time the app is closed." />
+
+        <TextView
+            style="@style/OdHeading"
+            android:text="THE RISKS" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/card_danger"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="• Battery wear: lithium-ion batteries age faster the longer they sit above ~45 °C. Regular Overdrive use will reduce your battery's capacity over months.\n\n• Samsung's protection will kick in: expect the phone to slow down, dim the screen, show an overheating warning or close apps. That's normal — the app pauses heating when Android reports severe heat and stops at critical.\n\n• Skin: 44 °C+ against skin for a long time can cause low-temperature burns, even though it doesn't feel dangerous at first."
+                android:textColor="@color/text"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/OdHeading"
+            android:text="SAFE USE" />
+
+        <TextView
+            style="@style/OdBody"
+            android:text="• Hold it in your hand — don't put it in a pocket, under a pillow, or against bare skin for long.\n• Don't use it while charging (the app pauses anyway).\n• Take off thick or insulating cases; they trap heat inside.\n• Don't leave it running unattended or let children use it.\n• If the phone shows an overheating warning, stop and let it cool." />
+
+        <CheckBox
+            android:id="@+id/ack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:buttonTint="@color/danger"
+            android:text="I understand the risks and will use Overdrive responsibly"
+            android:textColor="@color/text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/enable"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_danger"
+            android:enabled="false"
+            android:gravity="center"
+            android:letterSpacing="0.3"
+            android:text="ENABLE OVERDRIVE"
+            android:textColor="@color/bg"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:letterSpacing="0.3"
+            android:text="NOT NOW"
+            android:textColor="@color/dim"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>

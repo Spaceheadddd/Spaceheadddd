@@ -109,7 +109,7 @@ object Outside {
         }
     }
 
-    /** Colder outside → warmer target. -5 °C or below → 42 °C, 15 °C or above → 34 °C. */
+    /** Colder outside → warmer target. -5 °C or below → 44 °C, 15 °C or above → 36 °C. Never Overdrive. */
     fun autoTarget(outsideC: Float): Int =
-        (42f - (outsideC + 5f) * 0.4f).toInt().coerceIn(34, 42)
+        (44f - (outsideC + 5f) * 0.4f).toInt().coerceIn(36, HeaterService.MAX_NORMAL_TARGET_C)
 }
