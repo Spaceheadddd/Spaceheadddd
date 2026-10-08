@@ -1,4 +1,4 @@
-name: Build Hand Warmer APK
+name: Build Ignis APK
 
 on:
   push:
@@ -26,5 +26,5 @@ jobs:
           ./gradlew --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: hand-warmer-apk
+          name: ignis-apk
           path: hand-warmer/app/build/outputs/apk/debug/app-debug.apk

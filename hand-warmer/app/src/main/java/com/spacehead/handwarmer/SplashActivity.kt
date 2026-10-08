@@ -39,7 +39,7 @@ class SplashActivity : Activity() {
         val version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: ""
 
         val bootLog = listOf(
-            "> arcane.labs :: thermal core v$version",
+            "> arcane.labs :: ignis v$version",
             "> probing battery thermistor ........ ok",
             "> thermal governor link ............. ok",
             "> gpu turbo pipeline ................ ok",

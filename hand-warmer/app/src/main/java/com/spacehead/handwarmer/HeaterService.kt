@@ -311,7 +311,7 @@ class HeaterService : Service() {
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (nm.getNotificationChannel(CHANNEL_ID) == null) {
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "Hand warmer", NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(CHANNEL_ID, "Ignis heater", NotificationManager.IMPORTANCE_LOW)
             )
         }
         return nm
@@ -329,7 +329,7 @@ class HeaterService : Service() {
         )
         return Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_flame)
-            .setContentTitle(if (overdrive) "Hand warmer · OVERDRIVE" else "Hand warmer on")
+            .setContentTitle(if (overdrive) "Ignis · OVERDRIVE" else "Ignis · warming")
             .setContentText(text)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

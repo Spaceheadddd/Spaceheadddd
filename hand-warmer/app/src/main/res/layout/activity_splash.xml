@@ -43,7 +43,7 @@
             android:layout_marginTop="12dp"
             android:fontFamily="monospace"
             android:letterSpacing="0.3"
-            android:text="THERMAL // HAND WARMER"
+            android:text="IGNIS // THERMAL CORE"
             android:textColor="@color/dim"
             android:textSize="10sp" />
     </LinearLayout>

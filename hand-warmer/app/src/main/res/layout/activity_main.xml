@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:letterSpacing="0.35"
-                android:text="HAND WARMER"
+                android:text="IGNIS"
                 android:textColor="@color/text"
                 android:textSize="13sp" />
 

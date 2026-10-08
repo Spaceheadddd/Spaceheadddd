@@ -1,4 +1,4 @@
-# Hand Warmer (Android)
+# Ignis — Arcane Labs (Android hand warmer)
 
 Turns your phone into a hand warmer by running the CPU, then **holds** it at a
 comfortable temperature instead of letting it keep climbing. Built for (and
@@ -39,13 +39,13 @@ tested against the APIs of) the Galaxy S24 Ultra, works on Android 10+.
 - **⚠ OVERDRIVE** — unlocks 45–46 °C behind an education screen and explicit
   consent; cutoff 48 °C, sessions capped at 20 min, resets every app launch.
 - **Haptic pulse** when the phone first reaches temperature.
-- **Quick Settings tile** — pull down the shade, edit tiles, add *Hand Warmer*.
+- **Quick Settings tile** — pull down the shade, edit tiles, add *Ignis*.
 - **Arcane Labs** 5.5 s boot sequence; dark, monospace, minimal UI.
 
 ## Get the APK
 
 Every push that touches `hand-warmer/` builds it on GitHub Actions:
-**Actions → Build Hand Warmer APK → latest run → Artifacts → hand-warmer-apk**.
+**Actions → Build Ignis APK → latest run → Artifacts → ignis-apk**.
 Unzip, copy `app-debug.apk` to the phone and open it. Builds from v1.1 on are
 signed with a fixed debug key (`app/debug.keystore`), so new versions install
 over old ones; if you installed v1.0, uninstall it once first (allow "Install unknown
