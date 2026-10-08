@@ -87,6 +87,12 @@ class HeaterService : Service() {
     // Plateau detection: last time the temperature made real progress while at full power.
     private var progressTempC = 0f
     private var progressAtElapsed = 0L
+    private var lastTickElapsed = 0L
+
+    /** Mode name used to group drain measurements, e.g. "40°C · TURBO". */
+    private fun modeLabel() = listOfNotNull(
+        "%.0f°C".format(targetC), "TURBO".takeIf { turbo }, "OVERDRIVE".takeIf { overdrive }
+    ).joinToString(" · ")
     @Volatile private var active = false
 
     private val controlLoop = object : Runnable {
@@ -105,6 +111,7 @@ class HeaterService : Service() {
             return START_NOT_STICKY
         }
 
+        val previousMode = if (active) modeLabel() else null
         overdrive = intent?.getBooleanExtra(EXTRA_OVERDRIVE, false) ?: false
         val maxTarget = if (overdrive) MAX_OVERDRIVE_TARGET_C else MAX_NORMAL_TARGET_C
         val newTarget = (intent?.getFloatExtra(EXTRA_TARGET_C, 40f) ?: 40f).coerceAtMost(maxTarget.toFloat())
@@ -128,11 +135,19 @@ class HeaterService : Service() {
             progressAtElapsed = SystemClock.elapsedRealtime()
             progressTempC = Monitor.readBattery(this)?.tempC ?: 0f
             SessionLog.start()
+            DrainTracker.startSession(this)
+            lastTickElapsed = SystemClock.elapsedRealtime()
             acquireWakeLock(minutes)
             startWorkers()
             handler.post(controlLoop)
         } else {
-            // Already running: settings were updated, re-arm the wake lock for the new duration.
+            // Already running: settings were updated. A different mode starts a new drain
+            // record so each mode's drain is measured on its own.
+            if (previousMode != modeLabel()) {
+                DrainTracker.endSession(this, previousMode!!, peakC)
+                DrainTracker.startSession(this)
+            }
+            // Re-arm the wake lock for the new duration.
             wakeLock?.let { if (it.isHeld) it.release() }
             acquireWakeLock(minutes)
             regulate()
@@ -203,9 +218,13 @@ class HeaterService : Service() {
         }
 
         Monitor.record(temp, duty)
+        val nowTick = SystemClock.elapsedRealtime()
+        val powerW = Monitor.powerWatts(this, battery)
+        DrainTracker.tick(this, powerW, screenOn, battery.plugged, (nowTick - lastTickElapsed) / 1000f)
+        lastTickElapsed = nowTick
         SessionLog.add(
             temp, targetC, duty, thermal, Monitor.headroomPercent(this),
-            Monitor.powerWatts(this, battery), battery.plugged, screenOn, status
+            powerW, battery.plugged, screenOn, status
         )
         WarmerTileService.refresh(this)
 
@@ -295,6 +314,7 @@ class HeaterService : Service() {
         wakeLock?.let { if (it.isHeld) it.release() }
         wakeLock = null
         RoomTemp.markHeatEnded(this)
+        DrainTracker.endSession(this, modeLabel(), peakC)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
         WarmerTileService.refresh(this)

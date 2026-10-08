@@ -35,6 +35,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".BatteryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".OverdriveActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

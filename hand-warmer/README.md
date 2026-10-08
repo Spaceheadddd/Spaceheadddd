@@ -38,6 +38,11 @@ tested against the APIs of) the Galaxy S24 Ultra, works on Android 10+.
   the weather: ≤ −5 °C outside → 44 °C, ≥ 15 °C → 36 °C).
 - **⚠ OVERDRIVE** — unlocks 45–46 °C behind an education screen and explicit
   consent; cutoff 48 °C, sessions capped at 20 min, resets every app launch.
+- **Battery drain** — live %/hour, Ignis's share (total minus your learned
+  normal drain), battery used per session, and a mode comparison (each
+  target/TURBO/Overdrive combination vs normal screen-on/off use). Tap the
+  BATTERY DRAIN card for the full breakdown.
+- **Session log** — EXPORT LOG shares every control tick as CSV for diagnosis.
 - **Haptic pulse** when the phone first reaches temperature.
 - **Quick Settings tile** — pull down the shade, edit tiles, add *Ignis*.
 - **Arcane Labs** 5.5 s boot sequence; dark, monospace, minimal UI.

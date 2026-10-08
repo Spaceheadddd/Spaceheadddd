@@ -51,6 +51,8 @@ object RoomTemp {
         val p = prefs(context)
         val now = System.currentTimeMillis()
         if (battery.plugged || pm.isInteractive || HeaterService.isRunning) return
+        // Screen-off idle drain doubles as the "normal" baseline for drain comparisons.
+        Monitor.powerWatts(context, battery)?.let { DrainTracker.noteBaseline(context, it, screenOn = false) }
         if (now - p.getLong("heatEnded", 0L) < COOLDOWN_AFTER_HEAT_MS) return
 
         val kept = readSamples(context).filter { now - it.first < MAX_AGE_MS }.takeLast(23)

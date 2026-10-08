@@ -65,6 +65,9 @@ class MainActivity : Activity() {
     private lateinit var rateVal: TextView
     private lateinit var peakVal: TextView
     private lateinit var timeVal: TextView
+    private lateinit var drainNowVal: TextView
+    private lateinit var drainIgnisVal: TextView
+    private lateinit var drainSessionVal: TextView
     private val presetChips = mutableMapOf<String, TextView>()
 
     private val prefs by lazy { getSharedPreferences("settings", MODE_PRIVATE) }
@@ -125,6 +128,13 @@ class MainActivity : Activity() {
         rateVal = cell(row3, "RATE")
         peakVal = cell(row3, "PEAK")
         timeVal = cell(row3, "REMAINING")
+        val drainRow = findViewById<LinearLayout>(R.id.drainRow)
+        drainNowVal = cell(drainRow, "NOW")
+        drainIgnisVal = cell(drainRow, "IGNIS SHARE")
+        drainSessionVal = cell(drainRow, "THIS SESSION")
+        findViewById<View>(R.id.drainCard).setOnClickListener {
+            startActivity(Intent(this, BatteryActivity::class.java))
+        }
         (roomVal.parent as View).setOnClickListener { showCalibrateDialog() }
         (outsideVal.parent as View).setOnClickListener { requestOutsideTemp(force = true) }
 
@@ -376,7 +386,28 @@ class MainActivity : Activity() {
             (if (it.idleBased) "~" else "≈") + "%.0f°".format(it.tempC)
         } ?: "--"
         outsideVal.text = Outside.tempC?.let { "%.1f°".format(it) } ?: if (hasAmbientSensor) "…" else "TAP"
-        powerVal.text = Monitor.powerWatts(this, battery)?.let { "%.1fW".format(it) } ?: "--"
+        val powerW = Monitor.powerWatts(this, battery)
+        powerVal.text = powerW?.let { "%.1fW".format(it) } ?: "--"
+        // Learn the normal screen-on drain while the app is open and idle.
+        if (!running && battery != null && !battery.plugged && powerW != null) {
+            DrainTracker.noteBaseline(this, powerW, screenOn = true)
+        }
+        drainNowVal.text = when {
+            battery?.plugged == true -> "CHARGING"
+            powerW != null -> "%.0f%%/h".format(DrainTracker.percentPerHour(this, powerW))
+            else -> "--"
+        }
+        val base = DrainTracker.baselineW(this, screenOn = true)
+        drainIgnisVal.text = when {
+            !running -> "--"
+            powerW == null || base == null -> "LEARNING"
+            else -> "%.0f%%/h".format(DrainTracker.percentPerHour(this, (powerW - base).coerceAtLeast(0f)))
+        }
+        drainSessionVal.text = if (running && DrainTracker.liveSeconds > 0f) {
+            "%.1f%%".format(DrainTracker.livePercentUsed(this))
+        } else {
+            DrainTracker.sessions(this).lastOrNull()?.let { "%.1f%% last".format(it.percentUsed) } ?: "--"
+        }
         batteryVal.text = battery?.let { "${it.percent}%" + if (it.plugged) "+" else "" } ?: "--"
         headroomVal.text = Monitor.headroomPercent(this)?.let { "$it%" } ?: "--"
         thermalVal.text = Monitor.thermalLabel(this)
