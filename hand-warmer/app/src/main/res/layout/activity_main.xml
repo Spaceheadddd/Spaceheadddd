@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/flame"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="24dp"
+            android:alpha="0.35"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_flame" />
+
+        <TextView
+            android:id="@+id/tempText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="--.- °C"
+            android:textColor="#FFFFFF"
+            android:textSize="56sp"
+            android:fontFamily="sans-serif-light" />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Off"
+            android:textColor="#FFB680"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/targetLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:textColor="#DDDDDD"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/targetSeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/timerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:textColor="#DDDDDD"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/timerSeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/screenBoost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:buttonTint="#FF7A1A"
+            android:text="Screen boost (keep screen on at full brightness while this app is open)"
+            android:textColor="#DDDDDD" />
+
+        <Button
+            android:id="@+id/toggleButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#FF7A1A"
+            android:text="Start warming"
+            android:textColor="#120A06"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Warms the phone by running the CPU, regulated against battery temperature. Pauses while charging, stops below 15% battery, above 44 °C, or if Android reports severe thermal stress."
+            android:textColor="#888888"
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>
