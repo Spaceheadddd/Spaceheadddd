@@ -1,0 +1,8 @@
+<resources>
+    <color name="bg">#07080A</color>
+    <color name="surface">#0E1013</color>
+    <color name="line">#1C2026</color>
+    <color name="text">#E6E8EB</color>
+    <color name="dim">#5C6470</color>
+    <color name="heat">#FF6A1A</color>
+</resources>

@@ -5,17 +5,16 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.ServiceInfo
-import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
 import android.os.SystemClock
+import android.os.VibrationEffect
+import android.os.Vibrator
 
 /**
  * Foreground service that warms the phone by keeping CPU cores busy.
@@ -55,26 +54,14 @@ class HeaterService : Service() {
         /** Why the last session ended, shown in the UI after it stops. */
         @Volatile var lastStopReason: String? = null
             private set
-
-        fun readBattery(context: Context): BatteryInfo? {
-            val i = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-                ?: return null
-            val tenths = i.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE)
-            if (tenths == Int.MIN_VALUE) return null
-            val level = i.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-            val scale = i.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-            val plugged = i.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) != 0
-            val pct = if (level >= 0 && scale > 0) level * 100 / scale else 100
-            return BatteryInfo(tenths / 10f, pct, plugged)
-        }
+        @Volatile var targetC = 38f
+            private set
     }
-
-    data class BatteryInfo(val tempC: Float, val percent: Int, val plugged: Boolean)
 
     private val handler = Handler(Looper.getMainLooper())
     private val workers = mutableListOf<Thread>()
     private var wakeLock: PowerManager.WakeLock? = null
-    private var targetC = 38f
+    private var reachedTarget = false
     @Volatile private var active = false
 
     private val controlLoop = object : Runnable {
@@ -93,7 +80,9 @@ class HeaterService : Service() {
             return START_NOT_STICKY
         }
 
-        targetC = intent?.getFloatExtra(EXTRA_TARGET_C, 38f) ?: 38f
+        val newTarget = intent?.getFloatExtra(EXTRA_TARGET_C, 38f) ?: 38f
+        if (newTarget > targetC) reachedTarget = false
+        targetC = newTarget
         val minutes = intent?.getIntExtra(EXTRA_MINUTES, 30) ?: 30
         endsAtElapsed = SystemClock.elapsedRealtime() + minutes * 60_000L
 
@@ -103,6 +92,7 @@ class HeaterService : Service() {
             active = true
             isRunning = true
             lastStopReason = null
+            reachedTarget = false
             acquireWakeLock(minutes)
             startWorkers()
             handler.post(controlLoop)
@@ -116,7 +106,7 @@ class HeaterService : Service() {
     }
 
     private fun regulate() {
-        val battery = readBattery(this)
+        val battery = Monitor.readBattery(this)
         if (battery == null) {
             shutdown("Stopped: can't read battery temperature")
             return
@@ -145,12 +135,19 @@ class HeaterService : Service() {
             var d = ((targetC + 0.5f - temp) / 2.5f).coerceIn(0f, 1f)
             if (thermal >= PowerManager.THERMAL_STATUS_MODERATE) d = d.coerceAtMost(0.5f)
             duty = d
+            if (!reachedTarget && temp >= targetC - 0.3f) {
+                reachedTarget = true
+                buzz()
+            }
             status = when {
                 d >= 0.95f -> "Heating up"
                 d <= 0.01f -> "At temperature, resting"
                 else -> "Holding warm (%d%% power)".format((d * 100).toInt())
             }
         }
+
+        Monitor.record(temp, duty)
+        WarmerTileService.refresh(this)
 
         val minsLeft = ((endsAtElapsed - SystemClock.elapsedRealtime()) / 60_000L) + 1
         notificationManager().notify(
@@ -211,6 +208,14 @@ class HeaterService : Service() {
         wakeLock = null
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+        WarmerTileService.refresh(this)
+    }
+
+    /** Short double pulse: "warm and ready". */
+    private fun buzz() {
+        val v = getSystemService(Vibrator::class.java) ?: return
+        if (!v.hasVibrator()) return
+        v.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 40, 90, 40), -1))
     }
 
     override fun onDestroy() {

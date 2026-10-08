@@ -15,6 +15,22 @@ tested against the APIs of) the Galaxy S24 Ultra, works on Android 10+.
 - Optional **screen boost** keeps the display on at full brightness while the
   app is open, for extra heat.
 
+## Features
+
+- **Thermal gauge** — live battery temperature, target marker, inner power ring.
+- **Heat monitor** — 12-minute temperature trace with target line and power bars.
+- **Telemetry** — outside temp, live power draw (W), battery %, Android thermal
+  headroom, thermal status, time remaining.
+- **Outside temperature** — from an ambient sensor if the phone has one (the
+  S24 Ultra doesn't), otherwise current local weather from
+  [Open-Meteo](https://open-meteo.com) via coarse location. Tap the OUTSIDE cell
+  to refresh.
+- **Modes** — GENTLE 35 °C, WARM 38 °C, BLAZE 41 °C, or **AUTO**: target follows
+  the weather (≤ −5 °C outside → 42 °C, ≥ 15 °C → 34 °C).
+- **Haptic pulse** when the phone first reaches temperature.
+- **Quick Settings tile** — pull down the shade, edit tiles, add *Hand Warmer*.
+- **Arcane Labs** boot loader; dark, monospace, minimal UI.
+
 ## Safety limits (always on)
 
 | Condition | Action |
