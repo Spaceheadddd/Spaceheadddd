@@ -33,14 +33,27 @@ object Monitor {
     @Synchronized
     fun history(): List<Sample> = samples.toList()
 
-    /** Warming rate over the last minute in °C/min, or null with too little data. */
+    /**
+     * Warming rate in °C/min: least-squares slope over the last 3 minutes. Samsung updates
+     * battery temperature in coarse steps every 30–90 s, so a short window reads as 0.
+     */
     @Synchronized
     fun ratePerMinute(): Float? {
         val last = samples.lastOrNull() ?: return null
-        val first = samples.firstOrNull { last.atElapsed - it.atElapsed <= 60_000L } ?: return null
-        val dt = last.atElapsed - first.atElapsed
-        if (dt < 20_000L) return null
-        return (last.tempC - first.tempC) / (dt / 60_000f)
+        val window = samples.filter { last.atElapsed - it.atElapsed <= 180_000L }
+        if (window.size < 3 || last.atElapsed - window.first().atElapsed < 60_000L) return null
+        val t0 = window.first().atElapsed
+        val xs = window.map { (it.atElapsed - t0) / 60_000.0 }
+        val ys = window.map { it.tempC.toDouble() }
+        val mx = xs.average()
+        val my = ys.average()
+        var num = 0.0
+        var den = 0.0
+        for (i in xs.indices) {
+            num += (xs[i] - mx) * (ys[i] - my)
+            den += (xs[i] - mx) * (xs[i] - mx)
+        }
+        return if (den > 0.0) (num / den).toFloat() else null
     }
 
     fun readBattery(context: Context): BatteryInfo? {

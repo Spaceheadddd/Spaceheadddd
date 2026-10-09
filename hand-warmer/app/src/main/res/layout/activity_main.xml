@@ -277,6 +277,16 @@
                 android:text="Full brightness + screen on while the app is open" />
 
             <Switch
+                android:id="@+id/chargeHeat"
+                style="@style/HwSwitch"
+                android:layout_marginTop="12dp"
+                android:text="HEAT ON CHARGER" />
+
+            <TextView
+                style="@style/HwHint"
+                android:text="Keeps heating while plugged in: the hottest setting, and the hardest on the battery. 45 °C cutoff on the charger." />
+
+            <Switch
                 android:id="@+id/overdrive"
                 style="@style/HwSwitch"
                 android:layout_marginTop="12dp"

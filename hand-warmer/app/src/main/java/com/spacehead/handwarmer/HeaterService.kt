@@ -34,6 +34,9 @@ class HeaterService : Service() {
         const val EXTRA_MINUTES = "minutes"
         const val EXTRA_TURBO = "turbo"
         const val EXTRA_OVERDRIVE = "overdrive"
+        const val EXTRA_CHARGE_HEAT = "charge_heat"
+        /** Cutoff while heating on the charger: charging heats the battery directly. */
+        const val CHARGE_LIMIT_C = 45f
 
         /** Highest target without Overdrive, and the cutoff that goes with it. */
         const val MAX_NORMAL_TARGET_C = 44
@@ -52,7 +55,7 @@ class HeaterService : Service() {
         /** Battery temperature lags the chip; look this far ahead along the current trend. */
         private const val LEAD_SECONDS = 45f
         /** Full power for this long without +0.3 °C counts as a plateau. */
-        private const val PLATEAU_MS = 3 * 60_000L
+        private const val PLATEAU_MS = 5 * 60_000L
 
         // State shared with the UI. Written on the main thread, read by workers/UI.
         @Volatile var isRunning = false
@@ -71,6 +74,9 @@ class HeaterService : Service() {
         @Volatile var turbo = false
             private set
         @Volatile var overdrive = false
+            private set
+        /** User opted in to keep heating while plugged in. */
+        @Volatile var chargeHeat = false
             private set
         @Volatile var limitC = NORMAL_LIMIT_C
             private set
@@ -91,7 +97,8 @@ class HeaterService : Service() {
 
     /** Mode name used to group drain measurements, e.g. "40°C · TURBO". */
     private fun modeLabel() = listOfNotNull(
-        "%.0f°C".format(targetC), "TURBO".takeIf { turbo }, "OVERDRIVE".takeIf { overdrive }
+        "%.0f°C".format(targetC), "TURBO".takeIf { turbo }, "OVERDRIVE".takeIf { overdrive },
+        "CHARGER".takeIf { chargeHeat }
     ).joinToString(" · ")
     @Volatile private var active = false
 
@@ -113,6 +120,7 @@ class HeaterService : Service() {
 
         val previousMode = if (active) modeLabel() else null
         overdrive = intent?.getBooleanExtra(EXTRA_OVERDRIVE, false) ?: false
+        chargeHeat = intent?.getBooleanExtra(EXTRA_CHARGE_HEAT, false) ?: false
         val maxTarget = if (overdrive) MAX_OVERDRIVE_TARGET_C else MAX_NORMAL_TARGET_C
         val newTarget = (intent?.getFloatExtra(EXTRA_TARGET_C, 40f) ?: 40f).coerceAtMost(maxTarget.toFloat())
         if (newTarget > targetC) reachedTarget = false
@@ -168,8 +176,10 @@ class HeaterService : Service() {
         val thermal = pm.currentThermalStatus
         val screenOn = pm.isInteractive
 
+        val heatingOnCharger = battery.plugged && chargeHeat
+        val cutoff = if (heatingOnCharger) minOf(limitC, CHARGE_LIMIT_C) else limitC
         when {
-            temp >= limitC ->
+            temp >= cutoff ->
                 return shutdown("Stopped: phone reached %.1f °C".format(temp))
             thermal >= PowerManager.THERMAL_STATUS_CRITICAL ->
                 return shutdown("Stopped: Android reported critical heat")
@@ -180,8 +190,9 @@ class HeaterService : Service() {
         }
 
         when {
-            battery.plugged -> {
-                // Heat + charging is the worst combination for battery health.
+            battery.plugged && !chargeHeat -> {
+                // Heat + charging is the worst combination for battery health; only
+                // heat on the charger when the user explicitly opted in.
                 duty = 0f
                 status = "Paused: charging"
             }
@@ -210,6 +221,7 @@ class HeaterService : Service() {
                 status = when {
                     plateau && !screenOn -> "Plateau: screen off, phone limiting CPU"
                     plateau -> "Plateau: phone limiting power"
+                    d >= 0.95f && heatingOnCharger -> "Heating on charger"
                     d >= 0.95f -> if (screenOn) "Heating up" else "Heating up (screen off)"
                     d <= 0.01f -> "At temperature, resting"
                     else -> "Holding warm (%d%% power)".format((d * 100).toInt())
@@ -224,12 +236,14 @@ class HeaterService : Service() {
         lastTickElapsed = nowTick
         SessionLog.add(
             temp, targetC, duty, thermal, Monitor.headroomPercent(this),
-            powerW, battery.plugged, screenOn, status
+            powerW, battery.plugged, screenOn, gpu?.drawsPerSecond, status
         )
         WarmerTileService.refresh(this)
 
         val minsLeft = ((endsAtElapsed - SystemClock.elapsedRealtime()) / 60_000L) + 1
-        val tags = listOfNotNull("OVERDRIVE".takeIf { overdrive }, "TURBO".takeIf { turbo }).joinToString(" ")
+        val tags = listOfNotNull(
+            "OVERDRIVE".takeIf { overdrive }, "TURBO".takeIf { turbo }, "CHARGER".takeIf { chargeHeat }
+        ).joinToString(" ")
         notificationManager().notify(
             NOTIFICATION_ID,
             buildNotification(

@@ -14,6 +14,9 @@ import java.nio.ByteOrder
 class GpuBurner(private val duty: () -> Float) {
 
     @Volatile private var running = false
+    /** Draw calls completed per second, for the session log; null until measured. */
+    @Volatile var drawsPerSecond: Int? = null
+        private set
     private var thread: Thread? = null
 
     fun start() {
@@ -70,13 +73,25 @@ class GpuBurner(private val duty: () -> Float) {
 
             val windowNs = 100_000_000L
             var frame = 0
+            var countStart = System.nanoTime()
+            var drawsInSecond = 0
             while (running) {
                 val start = System.nanoTime()
                 val busyNs = (windowNs * duty()).toLong()
                 while (running && System.nanoTime() - start < busyNs) {
-                    GLES30.glUniform1f(tLoc, (frame++ % 10_000) * 0.001f)
-                    GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3)
+                    // Queue a batch before waiting so the GPU never idles between draws.
+                    repeat(BATCH) {
+                        GLES30.glUniform1f(tLoc, (frame++ % 10_000) * 0.001f)
+                        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3)
+                    }
                     GLES30.glFinish()
+                    drawsInSecond += BATCH
+                }
+                val now = System.nanoTime()
+                if (now - countStart >= 1_000_000_000L) {
+                    drawsPerSecond = (drawsInSecond * 1_000_000_000L / (now - countStart)).toInt()
+                    drawsInSecond = 0
+                    countStart = now
                 }
                 val restMs = (windowNs - (System.nanoTime() - start)) / 1_000_000L
                 if (restMs > 0) {
@@ -130,7 +145,8 @@ class GpuBurner(private val duty: () -> Float) {
     }
 
     private companion object {
-        const val SIZE = 1024
+        const val SIZE = 2048
+        const val BATCH = 4
 
         const val VERTEX = """#version 300 es
 in vec2 p;
@@ -146,7 +162,7 @@ void main() {
     vec2 uv = gl_FragCoord.xy * 0.001 + t;
     float a = uv.x;
     float b = uv.y;
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < 192; i++) {
         a = sin(a * 1.31 + b) + cos(b * 0.73 - a);
         b = fract(a * b + 0.123) * 2.0 - 1.0;
     }

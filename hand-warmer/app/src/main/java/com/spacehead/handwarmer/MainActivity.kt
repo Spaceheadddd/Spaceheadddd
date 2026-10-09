@@ -52,6 +52,7 @@ class MainActivity : Activity() {
     private lateinit var turboSwitch: Switch
     private lateinit var screenBoost: Switch
     private lateinit var stayAwake: Switch
+    private lateinit var chargeHeatSwitch: Switch
     private lateinit var overdriveSwitch: Switch
     private lateinit var toggleButton: TextView
     private lateinit var interlocks: TextView
@@ -112,6 +113,7 @@ class MainActivity : Activity() {
         turboSwitch = findViewById(R.id.turbo)
         screenBoost = findViewById(R.id.screenBoost)
         stayAwake = findViewById(R.id.stayAwake)
+        chargeHeatSwitch = findViewById(R.id.chargeHeat)
         overdriveSwitch = findViewById(R.id.overdrive)
         toggleButton = findViewById(R.id.toggleButton)
         interlocks = findViewById(R.id.interlocks)
@@ -151,6 +153,7 @@ class MainActivity : Activity() {
         turboSwitch.isChecked = prefs.getBoolean("turbo", false)
         screenBoost.isChecked = prefs.getBoolean("screenBoost", false)
         stayAwake.isChecked = prefs.getBoolean("stayAwake", true)
+        chargeHeatSwitch.isChecked = prefs.getBoolean("chargeHeat", false)
         mode = prefs.getString("mode", MODE_MANUAL) ?: MODE_MANUAL
 
         val onChange = object : SeekBar.OnSeekBarChangeListener {
@@ -174,6 +177,30 @@ class MainActivity : Activity() {
         screenBoost.setOnCheckedChangeListener(onScreenOption)
         stayAwake.setOnCheckedChangeListener(onScreenOption)
         findViewById<View>(R.id.exportLog).setOnClickListener { exportLog() }
+        chargeHeatSwitch.setOnCheckedChangeListener { _, checked ->
+            if (settingSwitch) return@setOnCheckedChangeListener
+            if (!checked) {
+                applySettings()
+                return@setOnCheckedChangeListener
+            }
+            setSwitchQuietly(chargeHeatSwitch, false)
+            AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle("Heat on charger?")
+                .setMessage(
+                    "Charging already heats the battery. Heating on top of it gives the most warmth, " +
+                        "but it's the hardest thing you can do to a lithium battery: expect faster wear " +
+                        "if you use it often.\n\n" +
+                        "• Cutoff while charging: ${HeaterService.CHARGE_LIMIT_C.toInt()} °C\n" +
+                        "• Samsung may slow or pause charging when the battery is hot\n" +
+                        "• Don't cover the phone while it's charging and heating"
+                )
+                .setPositiveButton("Enable") { _, _ ->
+                    setSwitchQuietly(chargeHeatSwitch, true)
+                    applySettings()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
         overdriveSwitch.setOnCheckedChangeListener { _, checked ->
             if (settingSwitch) return@setOnCheckedChangeListener
             if (checked) {
@@ -241,6 +268,7 @@ class MainActivity : Activity() {
             .putExtra(HeaterService.EXTRA_MINUTES, minutes)
             .putExtra(HeaterService.EXTRA_TURBO, turboSwitch.isChecked)
             .putExtra(HeaterService.EXTRA_OVERDRIVE, overdrive)
+            .putExtra(HeaterService.EXTRA_CHARGE_HEAT, chargeHeatSwitch.isChecked)
         startForegroundService(intent)
         handler.postDelayed({ refresh() }, 300)
     }
@@ -257,9 +285,11 @@ class MainActivity : Activity() {
         if (HeaterService.isRunning) startHeater()
     }
 
-    private fun setOverdriveSwitch(on: Boolean) {
+    private fun setOverdriveSwitch(on: Boolean) = setSwitchQuietly(overdriveSwitch, on)
+
+    private fun setSwitchQuietly(sw: Switch, on: Boolean) {
         settingSwitch = true
-        overdriveSwitch.isChecked = on
+        sw.isChecked = on
         settingSwitch = false
     }
 
@@ -418,7 +448,10 @@ class MainActivity : Activity() {
         if (running) {
             val left = (HeaterService.endsAtElapsed - SystemClock.elapsedRealtime()).coerceAtLeast(0) / 1000
             timeVal.text = "%d:%02d".format(left / 60, left % 60)
-            statusText.text = HeaterService.status.uppercase()
+            statusText.text = HeaterService.status.uppercase() +
+                if (HeaterService.status.startsWith("Plateau")) {
+                    "\nTIP: CASE ON · BOTH HANDS · POCKET OR GLOVE RAISES THE CEILING"
+                } else ""
             statusText.setTextColor(accent)
             stateTag.text = listOfNotNull("OVERDRIVE".takeIf { od }, "TURBO".takeIf { HeaterService.turbo }, "ACTIVE")
                 .joinToString(" · ")
@@ -438,9 +471,21 @@ class MainActivity : Activity() {
             toggleButton.setBackgroundResource(R.drawable.btn_primary)
             toggleButton.setTextColor(Palette.BG)
         }
-        interlocks.text = "INTERLOCKS: %.0f°C CUTOFF · PAUSE ON SEVERE HEAT · STOP ON CRITICAL\nPAUSE ON CHARGE · STOP BELOW %d%% BATTERY"
-            .format(limit, HeaterService.MIN_BATTERY_PCT)
+        val chargeRule = if (chargeHeatSwitch.isChecked) {
+            "%.0f°C CUTOFF ON CHARGE".format(HeaterService.CHARGE_LIMIT_C)
+        } else "PAUSE ON CHARGE"
+        interlocks.text = "INTERLOCKS: %.0f°C CUTOFF · PAUSE ON SEVERE HEAT · STOP ON CRITICAL\n%s · STOP BELOW %d%% BATTERY"
+            .format(limit, chargeRule, HeaterService.MIN_BATTERY_PCT)
         applyScreenBoost()
+    }
+
+    /** Hottest battery temperature any session has reached, so targets stay honest. */
+    private fun bestReached(): String {
+        val best = maxOf(
+            DrainTracker.sessions(this).maxOfOrNull { it.peakC } ?: 0f,
+            HeaterService.peakC
+        )
+        return if (best > 0f) "\nBEST REACHED  %.1f°C".format(best) else ""
     }
 
     private fun updateLabels() {
@@ -449,7 +494,7 @@ class MainActivity : Activity() {
             auto -> "TARGET  $targetC°C   [AUTO" + (Outside.tempC?.let { " · OUT %.0f°".format(it) } ?: " · NO DATA") + "]"
             overdrive -> "TARGET  $targetC°C   [OVERDRIVE · MAX ${HeaterService.MAX_OVERDRIVE_TARGET_C}°]"
             else -> "TARGET  $targetC°C   [MAX ${HeaterService.MAX_NORMAL_TARGET_C}°]"
-        }
+        } + bestReached()
         targetLabel.setTextColor(if (overdrive) Palette.HEAT_HOT else Palette.TEXT)
         timerLabel.text = if (overdrive && TIMER_STEPS[timerSeek.progress] > minutes) {
             "AUTO-OFF  $minutes MIN   [OVERDRIVE CAP]"
@@ -491,7 +536,7 @@ class MainActivity : Activity() {
         }
         val version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: ""
         val header = "# Ignis $version | ${Build.MANUFACTURER} ${Build.MODEL} | Android ${Build.VERSION.RELEASE}" +
-            " | turbo=${HeaterService.turbo} overdrive=${HeaterService.overdrive}" +
+            " | turbo=${HeaterService.turbo} overdrive=${HeaterService.overdrive} charger=${HeaterService.chargeHeat}" +
             " | room=${RoomTemp.estimate(this)?.tempC?.let { "%.1f".format(it) } ?: "?"}" +
             " outside=${Outside.tempC?.let { "%.1f".format(it) } ?: "?"}" +
             " | thermal_status: 0 none 1 light 2 moderate 3 severe 4 critical"
@@ -510,6 +555,7 @@ class MainActivity : Activity() {
             .putBoolean("turbo", turboSwitch.isChecked)
             .putBoolean("screenBoost", screenBoost.isChecked)
             .putBoolean("stayAwake", stayAwake.isChecked)
+            .putBoolean("chargeHeat", chargeHeatSwitch.isChecked)
             .putString("mode", mode)
             .apply()
     }
