@@ -47,6 +47,22 @@ tested against the APIs of) the Galaxy S24 Ultra, works on Android 10+.
 - **Quick Settings tile** — pull down the shade, edit tiles, add *Ignis*.
 - **Arcane Labs** 5.5 s boot sequence; dark, monospace, minimal UI.
 
+## Safety limits (always on)
+
+| Condition | Action |
+| --- | --- |
+| Battery ≥ 46 °C (48 °C in Overdrive) | stop |
+| Android thermal status *severe* | pause until it cools |
+| Android thermal status *critical* or worse | stop |
+| Battery < 15% (unplugged) | stop |
+| Plugged in / charging | pause, unless **Heat on charger** is enabled: then a 45 °C cutoff |
+| Auto-off timer (10–120 min; 20 min max in Overdrive) | stop |
+
+Measured on an S24 Ultra (23 °C room, in hand, unplugged): Samsung's thermal
+governor caps sustained heat at ~5–6 W within a minute, which levels the
+battery off around 37–38 °C. Insulation (case, both hands, pocket) or Heat on
+charger is needed to go higher.
+
 ## Get the APK
 
 Every push that touches `hand-warmer/` builds it on GitHub Actions:
