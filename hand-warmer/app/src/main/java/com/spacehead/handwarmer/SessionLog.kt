@@ -50,7 +50,7 @@ object SessionLog {
     @Synchronized
     fun toCsv(header: String): String = buildString {
         appendLine(header)
-        appendLine("t_s,battery_c,target_c,duty_pct,thermal_status,headroom_pct,power_w,plugged,screen_on,cpu_max_mhz,gpu_draws_per_s,status")
+        appendLine("t_s,battery_c,target_c,duty_pct,thermal_status,headroom_pct,power_w,plugged,screen_on,cpu_max_mhz,gpu_mpix_per_s,status")
         // Keep the share intent well under Android's ~1 MB binder limit.
         for (r in rows.takeLast(1800)) {
             appendLine(

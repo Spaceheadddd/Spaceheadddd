@@ -14,8 +14,8 @@ import java.nio.ByteOrder
 class GpuBurner(private val duty: () -> Float) {
 
     @Volatile private var running = false
-    /** Draw calls completed per second, for the session log; null until measured. */
-    @Volatile var drawsPerSecond: Int? = null
+    /** GPU throughput in megapixels shaded per second, for the session log; null until measured. */
+    @Volatile var megapixelsPerSecond: Int? = null
         private set
     private var thread: Thread? = null
 
@@ -46,10 +46,28 @@ class GpuBurner(private val duty: () -> Float) {
         if (!EGL14.eglChooseConfig(display, attribs, 0, configs, 0, 1, count, 0) || count[0] == 0) return
         val config = configs[0]
 
-        val context = EGL14.eglCreateContext(
-            display, config, EGL14.EGL_NO_CONTEXT,
-            intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 3, EGL14.EGL_NONE), 0
-        )
+        // Ask for a low-priority GPU context so the display compositor and app UI
+        // always preempt the heat load (no stutter or glitches on screen).
+        var lowPriority = EGL14.eglQueryString(display, EGL14.EGL_EXTENSIONS)
+            ?.contains("EGL_IMG_context_priority") == true
+        var context = if (lowPriority) {
+            EGL14.eglCreateContext(
+                display, config, EGL14.EGL_NO_CONTEXT,
+                intArrayOf(
+                    EGL14.EGL_CONTEXT_CLIENT_VERSION, 3,
+                    EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_LOW_IMG,
+                    EGL14.EGL_NONE
+                ), 0
+            )
+        } else EGL14.EGL_NO_CONTEXT
+        if (context == EGL14.EGL_NO_CONTEXT) {
+            // Driver refused the priority hint: plain context, and the loop leaves gaps instead.
+            lowPriority = false
+            context = EGL14.eglCreateContext(
+                display, config, EGL14.EGL_NO_CONTEXT,
+                intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 3, EGL14.EGL_NONE), 0
+            )
+        }
         val surface = EGL14.eglCreatePbufferSurface(
             display, config, intArrayOf(EGL14.EGL_WIDTH, SIZE, EGL14.EGL_HEIGHT, SIZE, EGL14.EGL_NONE), 0
         )
@@ -69,28 +87,42 @@ class GpuBurner(private val duty: () -> Float) {
                 .put(floatArrayOf(-1f, -1f, 3f, -1f, -1f, 3f)).also { it.position(0) }
             GLES30.glEnableVertexAttribArray(0)
             GLES30.glVertexAttribPointer(0, 2, GLES30.GL_FLOAT, false, 0, tri)
-            GLES30.glViewport(0, 0, SIZE, SIZE)
-
             val windowNs = 100_000_000L
             var frame = 0
             var countStart = System.nanoTime()
-            var drawsInSecond = 0
+            var pixelsInSecond = 0L
+            // Side of the square drawn per job; adapts so each GPU job stays within
+            // JOB_BUDGET_NS, short enough that screen frames are never held up.
+            var side = 512
             while (running) {
                 val start = System.nanoTime()
                 val busyNs = (windowNs * duty()).toLong()
                 while (running && System.nanoTime() - start < busyNs) {
-                    // Queue a batch before waiting so the GPU never idles between draws.
-                    repeat(BATCH) {
-                        GLES30.glUniform1f(tLoc, (frame++ % 10_000) * 0.001f)
-                        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3)
-                    }
+                    val jobStart = System.nanoTime()
+                    GLES30.glViewport(0, 0, side, side)
+                    GLES30.glUniform1f(tLoc, (frame++ % 10_000) * 0.001f)
+                    GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3)
                     GLES30.glFinish()
-                    drawsInSecond += BATCH
+                    val jobNs = System.nanoTime() - jobStart
+                    pixelsInSecond += side.toLong() * side
+                    side = when {
+                        jobNs > JOB_BUDGET_NS -> (side * 0.85f).toInt().coerceAtLeast(MIN_SIDE)
+                        jobNs < JOB_BUDGET_NS / 2 -> (side * 1.1f).toInt().coerceAtMost(SIZE)
+                        else -> side
+                    }
+                    // Without context priority, leave the GPU a short gap for the UI.
+                    if (!lowPriority) {
+                        try {
+                            Thread.sleep(1)
+                        } catch (_: InterruptedException) {
+                            running = false
+                        }
+                    }
                 }
                 val now = System.nanoTime()
                 if (now - countStart >= 1_000_000_000L) {
-                    drawsPerSecond = (drawsInSecond * 1_000_000_000L / (now - countStart)).toInt()
-                    drawsInSecond = 0
+                    megapixelsPerSecond = (pixelsInSecond * 1_000L / (now - countStart)).toInt()
+                    pixelsInSecond = 0
                     countStart = now
                 }
                 val restMs = (windowNs - (System.nanoTime() - start)) / 1_000_000L
@@ -145,8 +177,15 @@ class GpuBurner(private val duty: () -> Float) {
     }
 
     private companion object {
-        const val SIZE = 2048
-        const val BATCH = 4
+        /** Largest square per job (and the pbuffer size). */
+        const val SIZE = 1536
+        const val MIN_SIDE = 128
+        /** Max GPU time per job: well under one 120 Hz frame (8.3 ms). */
+        const val JOB_BUDGET_NS = 4_000_000L
+
+        // EGL_IMG_context_priority (not in EGL14 constants).
+        const val EGL_CONTEXT_PRIORITY_LEVEL_IMG = 0x3100
+        const val EGL_CONTEXT_PRIORITY_LOW_IMG = 0x3103
 
         const val VERTEX = """#version 300 es
 in vec2 p;

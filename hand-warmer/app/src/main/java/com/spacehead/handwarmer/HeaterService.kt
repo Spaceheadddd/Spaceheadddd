@@ -236,7 +236,7 @@ class HeaterService : Service() {
         lastTickElapsed = nowTick
         SessionLog.add(
             temp, targetC, duty, thermal, Monitor.headroomPercent(this),
-            powerW, battery.plugged, screenOn, gpu?.drawsPerSecond, status
+            powerW, battery.plugged, screenOn, gpu?.megapixelsPerSecond, status
         )
         WarmerTileService.refresh(this)
 
