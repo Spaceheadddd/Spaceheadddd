@@ -21,6 +21,9 @@ object SessionLog {
         val screenOn: Boolean,
         val cpuMaxMhz: Int?,
         val gpuDps: Int?,
+        val hotC: Float?,
+        val hotZone: String?,
+        val skinC: Float?,
         val status: String,
     )
 
@@ -39,9 +42,15 @@ object SessionLog {
         tempC: Float, targetC: Float, duty: Float, thermal: Int, headroomPct: Int?,
         powerW: Float?, plugged: Boolean, screenOn: Boolean, gpuDps: Int?, status: String,
     ) {
-        if (rows.size >= MAX_ROWS) rows.removeAt(0)
         val t = ((SystemClock.elapsedRealtime() - startElapsed) / 1000).toInt()
-        rows += Row(t, tempC, targetC, duty, thermal, headroomPct, powerW, plugged, screenOn, cpuMaxMhz(), gpuDps, status)
+        // Settings changes re-run the controller; keep one row per second.
+        if (rows.lastOrNull()?.tSec == t) rows.removeAt(rows.size - 1)
+        if (rows.size >= MAX_ROWS) rows.removeAt(0)
+        val hot = ThermalZones.hottest()
+        rows += Row(
+            t, tempC, targetC, duty, thermal, headroomPct, powerW, plugged, screenOn, cpuMaxMhz(), gpuDps,
+            hot?.tempC, hot?.name, ThermalZones.skin()?.tempC, status
+        )
     }
 
     @Synchronized
@@ -50,14 +59,16 @@ object SessionLog {
     @Synchronized
     fun toCsv(header: String): String = buildString {
         appendLine(header)
-        appendLine("t_s,battery_c,target_c,duty_pct,thermal_status,headroom_pct,power_w,plugged,screen_on,cpu_max_mhz,gpu_mpix_per_s,status")
+        appendLine("t_s,battery_c,target_c,duty_pct,thermal_status,headroom_pct,power_w,plugged,screen_on,cpu_max_mhz,gpu_mpix_per_s,hotspot_c,hotspot_zone,skin_c,status")
         // Keep the share intent well under Android's ~1 MB binder limit.
         for (r in rows.takeLast(1800)) {
             appendLine(
                 listOf(
                     r.tSec, "%.1f".format(r.tempC), "%.0f".format(r.targetC), (r.duty * 100).toInt(),
                     r.thermal, r.headroomPct ?: "", r.powerW?.let { "%.2f".format(it) } ?: "",
-                    if (r.plugged) 1 else 0, if (r.screenOn) 1 else 0, r.cpuMaxMhz ?: "", r.gpuDps ?: "", r.status.replace(',', ';'),
+                    if (r.plugged) 1 else 0, if (r.screenOn) 1 else 0, r.cpuMaxMhz ?: "", r.gpuDps ?: "",
+                    r.hotC?.let { "%.1f".format(it) } ?: "", r.hotZone?.replace(',', ';') ?: "",
+                    r.skinC?.let { "%.1f".format(it) } ?: "", r.status.replace(',', ';'),
                 ).joinToString(",")
             )
         }

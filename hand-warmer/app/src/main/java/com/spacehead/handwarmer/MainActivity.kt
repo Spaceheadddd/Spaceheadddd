@@ -128,7 +128,7 @@ class MainActivity : Activity() {
         headroomVal = cell(row2, "HEADROOM")
         thermalVal = cell(row2, "THERMAL")
         rateVal = cell(row3, "RATE")
-        peakVal = cell(row3, "PEAK")
+        peakVal = cell(row3, "HOTSPOT")
         timeVal = cell(row3, "REMAINING")
         val drainRow = findViewById<LinearLayout>(R.id.drainRow)
         drainNowVal = cell(drainRow, "NOW")
@@ -442,7 +442,8 @@ class MainActivity : Activity() {
         headroomVal.text = Monitor.headroomPercent(this)?.let { "$it%" } ?: "--"
         thermalVal.text = Monitor.thermalLabel(this)
         rateVal.text = Monitor.ratePerMinute()?.let { "%+.1f°/m".format(it) } ?: "--"
-        peakVal.text = if (HeaterService.peakC > 0f) "%.1f°".format(HeaterService.peakC) else "--"
+        // Hottest chip/skin sensor the phone lets apps read: closer to what your hand feels.
+        peakVal.text = (ThermalZones.skin() ?: ThermalZones.hottest())?.let { "%.1f°".format(it.tempC) } ?: "N/A"
 
         val accent = if (od) Palette.HEAT_HOT else Palette.HEAT
         if (running) {
@@ -539,7 +540,9 @@ class MainActivity : Activity() {
             " | turbo=${HeaterService.turbo} overdrive=${HeaterService.overdrive} charger=${HeaterService.chargeHeat}" +
             " | room=${RoomTemp.estimate(this)?.tempC?.let { "%.1f".format(it) } ?: "?"}" +
             " outside=${Outside.tempC?.let { "%.1f".format(it) } ?: "?"}" +
-            " | thermal_status: 0 none 1 light 2 moderate 3 severe 4 critical"
+            " | thermal_status: 0 none 1 light 2 moderate 3 severe 4 critical" +
+            "\n# zones(${ThermalZones.readableCount()}): " +
+            ThermalZones.readAll().joinToString("; ") { "${it.name}=%.1f".format(it.tempC) }
         val send = Intent(Intent.ACTION_SEND)
             .setType("text/plain")
             .putExtra(Intent.EXTRA_SUBJECT, "Ignis session log")

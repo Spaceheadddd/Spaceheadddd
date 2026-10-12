@@ -94,6 +94,8 @@ class HeaterService : Service() {
     private var progressTempC = 0f
     private var progressAtElapsed = 0L
     private var lastTickElapsed = 0L
+    /** When power first collapsed while we were asking for full power (Samsung clamping the app). */
+    private var lowPowerSince = 0L
 
     /** Mode name used to group drain measurements, e.g. "40°C · TURBO". */
     private fun modeLabel() = listOfNotNull(
@@ -232,6 +234,13 @@ class HeaterService : Service() {
         Monitor.record(temp, duty)
         val nowTick = SystemClock.elapsedRealtime()
         val powerW = Monitor.powerWatts(this, battery)
+        // Full power requested but the phone draws almost nothing: the system is holding the app back.
+        if (duty >= 0.95f && powerW != null && powerW < 3f && !battery.plugged) {
+            if (lowPowerSince == 0L) lowPowerSince = nowTick
+            if (nowTick - lowPowerSince > 8_000L) status = "Clamped: Samsung is holding back heat"
+        } else {
+            lowPowerSince = 0L
+        }
         DrainTracker.tick(this, powerW, screenOn, battery.plugged, (nowTick - lastTickElapsed) / 1000f)
         lastTickElapsed = nowTick
         SessionLog.add(
