@@ -1,0 +1,37 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "check_availability",
+      "description": "Get free appointment times for a service on a date.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "service": { "type": "string", "description": "mens haircut, skin fade, beard trim, cut and beard, or kids cut" },
+          "date": { "type": "string", "description": "YYYY-MM-DD" }
+        },
+        "required": ["service", "date"]
+      }
+    },
+    "server": { "url": "https://YOUR-SERVER-ADDRESS/vapi/tools" }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "book_appointment",
+      "description": "Book an appointment once the caller has chosen a free time.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "service": { "type": "string" },
+          "date": { "type": "string", "description": "YYYY-MM-DD" },
+          "time": { "type": "string", "description": "24-hour HH:MM, e.g. 14:30" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" }
+        },
+        "required": ["service", "date", "time", "name"]
+      }
+    },
+    "server": { "url": "https://YOUR-SERVER-ADDRESS/vapi/tools" }
+  }
+]
