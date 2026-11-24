@@ -233,7 +233,7 @@ We never spend before we're paid. Each new client on the same server costs only 
 | Reviews & reputation | Asks for Google reviews | Automation + SMS/email | Low | Everyone | 4/5 |
 | Reactivation | "Time for your next visit" | Automation | Low | Salons, dental, physio | 4/5 |
 | **Phone AI (add-on)** | Answers calls by voice, books | Vapi/Retell + our server | Medium | Clinics, trades, salons | 4/5 |
-| Security checks (add-on) | Monthly website security check | The owner's security skills | Low | Anyone with a site | 4/5 |
+| Security checks (add-on) | Monthly website security check | The founder's security skills | Low | Anyone with a site | 4/5 |
 | Managed open-source apps | Nextcloud, Umami, Uptime Kuma | Docker | Low | Offices | 3/5 |
 | Micro-SaaS (later) | One product for one niche | Own product | High | One niche | 3/5 |
 
