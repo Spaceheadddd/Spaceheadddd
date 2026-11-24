@@ -202,7 +202,7 @@ We never spend before we're paid. Each new client on the same server costs only 
 
 ## 6. Why servers add value
 
-*The owner's original idea was servers. This section explains, in plain English, why the server is what makes the model in [Section 5](#5-the-business-model) profitable.*
+*The founder's original idea was servers. This section explains, in plain English, why the server is what makes the model in [Section 5](#5-the-business-model) profitable.*
 
 **Plain English:** the server is the shop where the client's tools live. Because we run the shop, the client pays us every month, and we can fit many clients into one cheap shop.
 
@@ -243,7 +243,7 @@ We never spend before we're paid. Each new client on the same server costs only 
 
 ## 8. White label explained
 
-*The owner asked about white label. This section explains what it is, what it costs, and whether it fits the free-first model in [Section 5](#5-the-business-model).*
+*The founder asked about white label. This section explains what it is, what it costs, and whether it fits the free-first model in [Section 5](#5-the-business-model).*
 
 **White label** means a company makes a product and lets you sell it **under your own name**. There are two directions:
 
