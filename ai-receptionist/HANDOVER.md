@@ -10,7 +10,7 @@
 | **Files** | `ai-receptionist/` folder, git branch `ccr-dc5207a9-w25myz` |
 | **Currency** | AUD unless marked USD. All third-party prices are approximate, so check them before quoting. |
 
-> **For the next AI or person taking over:** the owner wants **plain English**, honest advice and clear steps. The hard rules are **$0 upfront, very low running costs, and the highest margin possible, short term to long term**. Read the document in order. Each section starts with a short intro, builds on the one before it, and links to related sections.
+> **For the next AI or person taking over:** the founder wants **plain English**, honest advice and clear steps. The hard rules are **$0 upfront, very low running costs, and the highest margin possible, short term to long term**. Read the document in order. Each section starts with a short intro, builds on the one before it, and links to related sections.
 
 ### Key to symbols
 | Symbol | Meaning |
@@ -25,7 +25,7 @@
 ## Contents
 **Part A: Starting point**
 1. [Executive summary](#1-executive-summary)
-2. [The owner and the brief](#2-the-owner-and-the-brief)
+2. [The founder and the brief](#2-the-founder-and-the-brief)
 3. [Discussion record](#3-discussion-record)
 
 **Part B: The business**
@@ -69,7 +69,7 @@
 
 *This section answers the main question first: is this worth doing? Everything after it explains and backs up these answers.*
 
-**Short answer: yes.** It costs **$0 to start**, has **very low running costs**, and keeps **about 75-95% of every dollar** a client pays as profit. Income repeats monthly. The limits are **finding clients** and **the owner's time**, not money.
+**Short answer: yes.** It costs **$0 to start**, has **very low running costs**, and keeps **about 75-95% of every dollar** a client pays as profit. Income repeats monthly. The limits are **finding clients** and **the founder's time**, not money.
 
 | Question | Answer | Details |
 |---|---|---|
@@ -86,11 +86,11 @@
 
 ---
 
-## 2. The owner and the brief
+## 2. The founder and the brief
 
 *Before planning anything, we need to be clear about who is doing this and what they asked for. Every later decision is checked against this section.*
 
-### 2.1 The brief, in the owner's words
+### 2.1 The brief, in the founder's words
 > "I'm looking for a low cost business model where I can rent out servers or something like that without any upfront cost.
 >
 > I'm broke atm and I can build systems - meaning I'm technology driven via coding and ai.
@@ -106,9 +106,9 @@ By "rent out servers" they meant **wholesale, reselling or white label**.
 | **Very low running costs** | Shared servers, free tiers, pay-per-use only ([Section 14](#14-our-costs)) |
 | **Highest margin, short to long run** | Recurring fees with costs that barely grow per client ([Section 16](#16-margins-and-profit)) |
 | **Servers / white label** | Infrastructure is the base of the business ([Section 6](#6-why-servers-add-value), [Section 8](#8-white-label-explained)) |
-| **Use the owner's assets** | **Time, skills and energy**: coding, AI, building systems |
+| **Use the founder's assets** | **Time, skills and energy**: coding, AI, building systems |
 
-### 2.3 The owner
+### 2.3 The founder
 | Item | Detail |
 |---|---|
 | Money | None to invest |
@@ -122,10 +122,10 @@ By "rent out servers" they meant **wholesale, reselling or white label**.
 
 ## 3. Discussion record
 
-*This section records how the conversation turned the brief in [Section 2](#2-the-owner-and-the-brief) into a direction: what the owner asked, what was suggested, and what was agreed. Later sections build on these decisions.*
+*This section records how the conversation turned the brief in [Section 2](#2-the-founder-and-the-brief) into a direction: what the founder asked, what was suggested, and what was agreed. Later sections build on these decisions.*
 
 ### 3.1 Key discussions
-| # | Topic | Owner said | Suggested | Decision |
+| # | Topic | Founder said | Suggested | Decision |
 |---|---|---|---|---|
 | 1 | Best bet | Rent out servers, no upfront cost | **"Don't rent servers. Rent outcomes that happen to run on servers."** Set up and run something a business needs, host it on a $5-20 VPS, charge $50-300 a month. [D] | [Yes] "Seems good" |
 | 2 | What to sell | - | AI chatbot, automation (n8n), managed open-source apps, micro-SaaS later | [Yes] Becomes the app menu ([Section 7](#7-the-apps-we-can-sell)) |
@@ -139,7 +139,7 @@ By "rent out servers" they meant **wholesale, reselling or white label**.
 | 10 | No bookings | "What if they don't do bookings?" | Sell another app, or skip them | [Yes] |
 | 11 | Phone | "Let's do that" | Phone demo built | [Yes] **Phone = add-on** ([Section 12](#12-starting-offer-and-add-ons)) |
 | 12 | Install | "Need their code?" | No. One pasted line, or a link, QR code or social media. | [Yes] |
-| 13 | Leads | Owner's idea: automate finding and profiling leads, emails, a tracker | Lead engine design | [Yes] ([Section 23](#23-the-lead-engine)) |
+| 13 | Leads | Founder's idea: automate finding and profiling leads, emails, a tracker | Lead engine design | [Yes] ([Section 23](#23-the-lead-engine)) |
 
 ### 3.2 Concerns and where they're handled
 | Concern | Handled in |
@@ -291,7 +291,7 @@ We never spend before we're paid. Each new client on the same server costs only 
 |---|---|
 | Who we are | A local Newcastle tech partner for small businesses |
 | What we do | We set up, host and look after the tech that brings you customers and saves you admin |
-| For whom | Busy owner-run businesses, 1-20 staff, no IT person |
+| For whom | Busy independently run businesses, 1-20 staff, no IT person |
 | Promise | **"You run your business. We run your tech."** |
 | Versus agencies | Local, cheaper, monthly, one contact, no jargon |
 | Versus DIY apps | Done for you, connected, looked after, AI built in |
@@ -330,7 +330,7 @@ We never spend before we're paid. Each new client on the same server costs only 
 ### 11.1 Ideal client profile
 | Trait | Ideal | Avoid |
 |---|---|---|
-| Size | 1-20 staff, owner-run | Chains and franchises (head office decides) |
+| Size | 1-20 staff, independently run | Chains and franchises (head office decides) |
 | Business | Takes bookings or enquiries | Pure walk-in with no online presence and no interest |
 | Online | Has a website or an active Google/Instagram listing | Totally offline |
 | Reviews | 20-300 Google reviews (established, still independent) | Brand new or very large |
@@ -340,8 +340,8 @@ We never spend before we're paid. Each new client on the same server costs only 
 ### 11.2 Client personas
 | Persona | Example | What they care about | What we lead with |
 |---|---|---|---|
-| **Busy barber/salon owner** | 3-chair barber on Beaumont St | Not missing DMs and calls mid-cut, fewer no-shows | Chatbot + Instagram + reminders |
-| **Clinic owner/manager** | 4-practitioner physio in Charlestown | Reception overload, after-hours enquiries, new patients | Chatbot for enquiries + new-patient requests, phone add-on |
+| **Busy barber/salon operator** | 3-chair barber on Beaumont St | Not missing DMs and calls mid-cut, fewer no-shows | Chatbot + Instagram + reminders |
+| **Clinic principal/manager** | 4-practitioner physio in Charlestown | Reception overload, after-hours enquiries, new patients | Chatbot for enquiries + new-patient requests, phone add-on |
 | **Tradie** (next niche) | Solo plumber | Missing jobs while on the tools | Phone add-on + quote intake |
 
 ### 11.3 How a client decides
@@ -722,7 +722,7 @@ gantt
 | Value to clients | [Yes] Cheaper than their alternatives ([Section 15](#15-our-side-vs-the-clients-side)) |
 | Short-term income | [Caution] Small (~ $600 in months 1-3) |
 | Long-term income | [Yes] $50-90k a year possible |
-| Risks | [Caution] Sales speed, owner time |
+| Risks | [Caution] Sales speed, founder time |
 
 **Verdict: profitable, low risk, slow-to-medium growth.** It's not quick money, but it's a real recurring business that costs almost nothing to start.
 
@@ -763,7 +763,7 @@ After 100 contacts each, compare **reply %, demo %, close %, average fee** and *
 
 ## 22. Tools and sources, rated
 
-*This section lists every tool and source we'd use, why each is free or cheap, and how it rates. **Why free first:** the owner has no money, so everything runs on free tiers, trial credits or open source until a client's fee covers it. Limits and prices change, so check before relying on them.*
+*This section lists every tool and source we'd use, why each is free or cheap, and how it rates. **Why free first:** the founder has no money, so everything runs on free tiers, trial credits or open source until a client's fee covers it. Limits and prices change, so check before relying on them.*
 
 ### 22.1 Servers and hosting
 | Source | What it is | Cost | Best for | Rating | Verdict |
@@ -823,7 +823,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 
 ## 23. The lead engine
 
-*[Section 20](#20-is-it-profitable) named sales as the biggest risk, and [Section 17](#17-workload) showed the owner's time is limited. The lead engine solves both: it automatically finds, profiles, scores and contacts local businesses, so the owner only handles replies and demos. This section covers what it needs, how it's built, how it operates, and how it behaves.*
+*[Section 20](#20-is-it-profitable) named sales as the biggest risk, and [Section 17](#17-workload) showed the founder's time is limited. The lead engine solves both: it automatically finds, profiles, scores and contacts local businesses, so the founder only handles replies and demos. This section covers what it needs, how it's built, how it operates, and how it behaves.*
 
 ### 23.1 What it does
 | Job | Result |
@@ -832,7 +832,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 | **Profile** each business and its website | What tools they use, what's missing, how good the site is |
 | **Check competitors**: any chat assistant or AI already there | What it can do, and how we'd improve on it |
 | **Score** fit against the ideal client profile ([Section 11.1](#111-ideal-client-profile)) | 0-100 priority |
-| **Find a contact**: public email, owner name | Who to write to |
+| **Find a contact**: public email, decision-maker name | Who to write to |
 | **Track** every lead and every action | One list with statuses |
 | **Email** automatically with personalised demos | Replies and demo bookings |
 | **Report** results | Reply, demo and win rates |
@@ -854,7 +854,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 ### 23.3 What it needs
 | Need | Option | Cost | Rating | Notes |
 |---|---|---|---|---|
-| Language/runtime | Node.js or Python | Free | 5/5 | Matches the owner's skills |
+| Language/runtime | Node.js or Python | Free | 5/5 | Matches the founder's skills |
 | Business data | **OpenStreetMap Overpass API** | Free | 4/5 | Good coverage, websites sometimes missing |
 | Business data | **Google Places API** | Free monthly allowance, then paid | 4/5 | Best data (website, rating, reviews). Needs an API key and billing account. Use within the free allowance. |
 | Business check | **ABN Lookup web services** | Free (GUID) | 4/5 | Confirms active businesses |
@@ -942,7 +942,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 |---|---|
 | `mailto:` links and the contact page on their site | [Yes] |
 | Google / Facebook / directory listing email | [Yes] |
-| Owner name from the About page | [Yes] (personalisation) |
+| Decision-maker name from the About page | [Yes] (personalisation) |
 | Hunter.io (top leads) | [Caution] |
 | Guessed addresses, bought lists | [No] ([Section 27](#27-risks-and-compliance)) |
 
@@ -956,11 +956,11 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 | `queued` | Ready | Email 1 in the next send window |
 | `contacted` | Email 1 sent | Email 2 after 3-4 days |
 | `followed_up` | Email 2 sent | Email 3 after 7 days |
-| `replied` | Reply detected | **Stop sequence, alert the owner** |
-| `demo_booked` | Owner sets it | Reminder email the day before |
-| `demo_done` | Owner sets it | Proposal template |
+| `replied` | Reply detected | **Stop sequence, alert the founder** |
+| `demo_booked` | Founder sets it | Reminder email the day before |
+| `demo_done` | Founder sets it | Proposal template |
 | `won` | Paid | Onboarding ([Section 11.5](#115-onboarding-from-yes-to-live)) |
-| `lost` / `not_now` | Owner sets it | Recheck in 90-180 days |
+| `lost` / `not_now` | Founder sets it | Recheck in 90-180 days |
 | `bounced` | Email bounced | Find another contact or mark for a visit |
 | `unsubscribed` | Opt-out | **Never contact again** |
 
@@ -992,7 +992,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 ### 23.11 Reply handler
 | Situation | Action |
 |---|---|
-| Positive reply | Status `replied`, alert the owner (email/phone), suggest demo times |
+| Positive reply | Status `replied`, alert the founder (email/phone), suggest demo times |
 | "Not now" | `not_now`, recheck in 90 days |
 | "Stop" / unsubscribe | `unsubscribed`, block forever |
 | Auto-reply / out of office | Pause 7 days |
@@ -1016,7 +1016,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 | Nightly | Crawler, detector, scoring for new or stale leads |
 | Daily (send window) | Sequencer sends due emails |
 | Every 15 min | Reply check |
-| Weekly (Fri) | Report to the owner |
+| Weekly (Fri) | Report to the founder |
 
 ### 23.14 Failure handling
 | Problem | Behaviour |
@@ -1024,7 +1024,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 | Website down / timeout | Retry twice, then mark `site_unreachable` |
 | API limit reached | Stop and resume tomorrow, staying within free limits |
 | No email found | Mark for phone, DM or visit |
-| Spam complaints or high bounce rate | Auto-pause sending, alert the owner |
+| Spam complaints or high bounce rate | Auto-pause sending, alert the founder |
 | Duplicate lead | Merge records |
 
 ### 23.15 Build plan
@@ -1050,7 +1050,7 @@ Covered in detail in [Section 23.3](#233-what-it-needs).
 ### 24.1 Built
 | File | What it is | Status |
 |---|---|---|
-| `chat-demo.html` | **Demo 1.** Chat booking demo for the made-up "Foreshore Fade Co." barber, with an owner diary. **Scripted, not AI.** Browser storage only. Also the base for the personalised demos in [Section 23.10](#2310-personalised-demo-generator). | [Yes] |
+| `chat-demo.html` | **Demo 1.** Chat booking demo for the made-up "Foreshore Fade Co." barber, with a staff booking diary. **Scripted, not AI.** Browser storage only. Also the base for the personalised demos in [Section 23.10](#2310-personalised-demo-generator). | [Yes] |
 | `server.js` | **Demo 2 backend.** Node.js, no packages. Check-times and book tools + `/bookings` diary. Used by the **phone add-on** (Vapi). Reusable for the chatbot. | [Yes] Tested locally |
 | `assistant-prompt.md` | Voice AI instructions | [Caution] Untested live |
 | `tools.json` | Vapi tool definitions | [Caution] URL to fill in |
@@ -1082,7 +1082,7 @@ The real AI chatbot (starting offer), embed widget, multi-client setup, lead eng
 |---|---|---|---|---|
 | 0 | Week 1 | Demos proven | [Section 24.3](#243-dry-test-run-0) | Videos recorded |
 | 1 | Weeks 1-2 | Lead engine v1 | [Section 23.15](#2315-build-plan) | 200+ scored leads |
-| 2 | Weeks 2-4 | Chatbot MVP | AI chat + widget + per-client settings + owner alerts, on Oracle Free | Live on a test site |
+| 2 | Weeks 2-4 | Chatbot MVP | AI chat + widget + per-client settings + client alerts, on Oracle Free | Live on a test site |
 | 3 | Weeks 3-8 | First clients | Outreach, demos, proposals | **First payment** ([Section 18](#18-time-to-first-client)) |
 | 4 | Months 3-6 | Repeatable delivery | Templates, onboarding, reports, backups | 5-8 clients |
 | 5 | Months 6-12 | Higher fee per client | Add-ons ([Section 12](#12-starting-offer-and-add-ons)) | Average fee $150+ |
@@ -1123,7 +1123,7 @@ The real AI chatbot (starting offer), embed widget, multi-client setup, lead eng
 | Risk | Likelihood | Mitigation |
 |---|---|---|
 | Not enough clients | Med-high | Lead engine, personalised demos, two niches |
-| Owner time | Medium | Templates, automation ([Section 17](#17-workload)) |
+| Founder time | Medium | Templates, automation ([Section 17](#17-workload)) |
 | Free tiers change | Medium | Docker. Move to a client-funded VPS. |
 | AI mistakes | Medium | Strict prompts, tools only, human hand-off |
 | Clients leave | Low-med | Bundles, monthly value reports |
@@ -1141,12 +1141,12 @@ The real AI chatbot (starting offer), embed widget, multi-client setup, lead eng
 2. **The business is managed tech services** (server + app + maintenance). The chatbot is the **starting offer**, not the whole business.
 3. **Phone AI is an add-on.**
 4. Run **barbers & salons and allied health clinics in parallel** ([Section 20.3](#203-which-niche-to-keep)).
-5. Plain English with the owner.
+5. Plain English with the founder.
 6. Australian law first ([Section 27](#27-risks-and-compliance)).
 7. Label figures [D] discussed or [S] suggested.
 8. Keep code simple and portable.
 
-### 28.2 Open questions for the owner
+### 28.2 Open questions for the founder
 | # | Question |
 |---|---|
 | 1 | Brand name and domain? |
@@ -1157,8 +1157,8 @@ The real AI chatbot (starting offer), embed widget, multi-client setup, lead eng
 ### 28.3 Next actions
 | # | Action | Who |
 |---|---|---|
-| 1 | Dry test run ([Section 24.3](#243-dry-test-run-0)) | Owner |
-| 2 | Build lead engine v1 ([Section 23.15](#2315-build-plan)) | Owner + AI |
-| 3 | Build chatbot MVP + widget | Owner + AI |
-| 4 | Clinic demo alongside the barber demo | Owner + AI |
-| 5 | Brand name + domain for outreach | Owner |
+| 1 | Dry test run ([Section 24.3](#243-dry-test-run-0)) | Founder |
+| 2 | Build lead engine v1 ([Section 23.15](#2315-build-plan)) | Founder + AI |
+| 3 | Build chatbot MVP + widget | Founder + AI |
+| 4 | Clinic demo alongside the barber demo | Founder + AI |
+| 5 | Brand name + domain for outreach | Founder |
