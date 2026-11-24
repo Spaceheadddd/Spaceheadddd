@@ -23,43 +23,36 @@
 ---
 
 ## Contents
-**Part A: Starting point**
-1. [Executive summary](#1-executive-summary)
-2. [The founder and the brief](#2-the-founder-and-the-brief)
-3. [Discussion record](#3-discussion-record)
-
-**Part B: The business**
-4. [The problem we solve](#4-the-problem-we-solve)
-5. [The business model: server + app + maintenance](#5-the-business-model)
-6. [Why servers add value](#6-why-servers-add-value)
-7. [The apps we can sell](#7-the-apps-we-can-sell)
-8. [White label explained](#8-white-label-explained)
-9. [Positioning](#9-positioning)
-
-**Part C: Market and clients**
-10. [Niches, ranked](#10-niches-ranked)
-11. [Clients](#11-clients)
-12. [Starting offer and add-ons](#12-starting-offer-and-add-ons)
-
-**Part D: The money**
-13. [Pricing](#13-pricing)
-14. [Our costs](#14-our-costs)
-15. [Our side vs the client's side](#15-our-side-vs-the-clients-side)
-16. [Margins and profit](#16-margins-and-profit)
-17. [Workload](#17-workload)
-18. [Time to first client](#18-time-to-first-client)
-19. [Projections](#19-projections)
-20. [Is it profitable? Verdict and decisions](#20-is-it-profitable)
-21. [Other options compared](#21-other-options-compared)
-
-**Part E: Doing it**
-22. [Tools and sources, rated](#22-tools-and-sources-rated)
-23. [The lead engine](#23-the-lead-engine)
-24. [What's built: demos and dry test run](#24-whats-built)
-25. [Roadmap](#25-roadmap)
-26. [Scope](#26-scope)
-27. [Risks and compliance](#27-risks-and-compliance)
-28. [Handover rules and next actions](#28-handover-rules-and-next-actions)
+| Part | No. | Section |
+|---|---|---|
+| A: Starting point | 1 | [Executive summary](#1-executive-summary) |
+|  | 2 | [The founder and the brief](#2-the-founder-and-the-brief) |
+|  | 3 | [Discussion record](#3-discussion-record) |
+| B: The business | 4 | [The problem we solve](#4-the-problem-we-solve) |
+|  | 5 | [The business model: server + app + maintenance](#5-the-business-model) |
+|  | 6 | [Why servers add value](#6-why-servers-add-value) |
+|  | 7 | [The apps we can sell](#7-the-apps-we-can-sell) |
+|  | 8 | [White label explained](#8-white-label-explained) |
+|  | 9 | [Positioning](#9-positioning) |
+| C: Market and clients | 10 | [Niches, ranked](#10-niches-ranked) |
+|  | 11 | [Clients](#11-clients) |
+|  | 12 | [Starting offer and add-ons](#12-starting-offer-and-add-ons) |
+| D: The money | 13 | [Pricing](#13-pricing) |
+|  | 14 | [Our costs](#14-our-costs) |
+|  | 15 | [Our side vs the client's side](#15-our-side-vs-the-clients-side) |
+|  | 16 | [Margins and profit](#16-margins-and-profit) |
+|  | 17 | [Workload](#17-workload) |
+|  | 18 | [Time to first client](#18-time-to-first-client) |
+|  | 19 | [Projections](#19-projections) |
+|  | 20 | [Is it profitable? Verdict and decisions](#20-is-it-profitable) |
+|  | 21 | [Other options compared](#21-other-options-compared) |
+| E: Doing it | 22 | [Tools and sources, rated](#22-tools-and-sources-rated) |
+|  | 23 | [The lead engine](#23-the-lead-engine) |
+|  | 24 | [What's built: demos and dry test run](#24-whats-built) |
+|  | 25 | [Roadmap](#25-roadmap) |
+|  | 26 | [Scope](#26-scope) |
+|  | 27 | [Risks and compliance](#27-risks-and-compliance) |
+|  | 28 | [Handover rules and next actions](#28-handover-rules-and-next-actions) |
 
 ---
 
@@ -756,6 +749,35 @@ After 100 contacts each, compare **reply %, demo %, close %, average fee** and *
 | Buying GPUs or servers | High | Thin | [Yes] | Slow | Low | 1/5 | [No] |
 
 **Best combination:** managed services at the core, freelance jobs for quick cash, turned into retainers, security as a unique add-on.
+
+### 21.1 The original idea: renting out compute, like a server farm
+
+*The founder's first idea was to rent out computing power the way a server farm or cloud provider does, at cheaper rates. This subsection checks whether that works under the brief in [Section 2](#2-the-founder-and-the-brief).*
+
+**Short answer:** it's possible, but not with $0. A server farm makes its money from **owning hardware**. Without hardware you can only resell someone else's, and they're already cheaper than you can be.
+
+| Way to do it | How it works | Upfront | Margin | Main problems | Rating |
+|---|---|---|---|---|---|
+| Own hardware in a data centre (colocation) | Buy servers, pay a data centre for space, power and internet, rent out the machines | $5,000-50,000+ | Medium | Capital, power costs, hardware failures, 24/7 support | 1/5 for now |
+| Run servers at home | Old or used machines on home internet | $500-3,000 | Low | Home internet upload is slow, no backup power, terms of service issues | 1/5 |
+| Rent out a GPU on a marketplace (Vast.ai, RunPod community, Salad) | List a GPU you own and get paid per hour of use | A GPU you already own | Low-medium | Needs a good GPU. Income often only a few dollars a day after power. | 2/5 (only if you already own one) |
+| Resell cloud servers cheaper | Buy from Hetzner, Vultr or BinaryLane and sell to others | ~$0-20 | Very thin | Can't beat the seller's own price. Abuse (crypto mining, spam), chargebacks, support load. Reselling free tiers breaks their terms. | 1/5 |
+| **Sell compute bundled with a service (this plan)** | Our servers run apps for clients ([Section 5](#5-the-business-model)) | **$0** | **75-95%** | Needs sales | **5/5** |
+
+**Why cheaper raw compute doesn't work for us:**
+1. **Big providers buy hardware and power in bulk.** Hetzner, AWS and Google pay far less per server than any small operator.
+2. **Customers compare on price alone.** Raw compute is a commodity, so the cheapest seller wins.
+3. **Risk and support are high.** Strangers renting compute bring abuse, unpaid bills and 24/7 support demands.
+4. **It breaks the $0 rule.** Real capacity needs hardware or prepaid servers first.
+
+**Where compute could fit later:**
+| Option | When | Why it could work |
+|---|---|---|
+| **Private AI hosting** for local clients (e.g. clinics wanting an AI model running on Australian servers) | After 10+ clients | Sold as a service with data kept in Australia, not as cheap compute |
+| Buying a small GPU server from profits | Year 2+ | Lowers our own AI costs and can be resold as part of services |
+| Listing spare capacity on a GPU marketplace | Only if hardware is already owned | Small extra income |
+
+**Verdict:** keep the server idea, but sell **what runs on the servers**, not the servers themselves. Raw compute comes back as an option once the business has money to invest.
 
 ---
 
